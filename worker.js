@@ -178,7 +178,7 @@ async function trackEvent(env, eventType, detailKey = null) {
 
     await env.FILES_DB.put(STATS_KEY, JSON.stringify(stats));
   } catch (e) {
-    // Non-critical logging
+    console.error('trackEvent failed:', e);
   }
 }
 
@@ -403,7 +403,7 @@ export default {
       }
 
       // Track download metric
-      trackEvent(env, 'download', storageKey);
+      await trackEvent(env, 'download', storageKey);
 
       // Helper to detect MIME type and text/code status
       function getFileStreamMime(filename, fallbackMime = 'application/octet-stream') {
@@ -761,7 +761,7 @@ export default {
           success: true,
           analytics: {
             visitors: {
-              total: Math.max(1, stats.totalVisits || 0),
+              total: stats.totalVisits || 0,
               today: (stats.dailyVisits && stats.dailyVisits[new Date().toISOString().split('T')[0]]) || 0,
               daily: stats.dailyVisits || {}
             },
@@ -979,7 +979,7 @@ export default {
 
 
     // Default: Serve frontend HTML application & Track User Visit
-    trackEvent(env, 'visit');
+    await trackEvent(env, 'visit');
 
     return new Response(HTML_TEMPLATE, {
       headers: getSecurityHeaders('text/html;charset=UTF-8')
