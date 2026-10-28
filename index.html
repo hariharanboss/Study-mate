@@ -251,6 +251,24 @@
       gap: 10px;
     }
 
+    /* Compact same-size header action buttons: Notifications, Suggest, Theme */
+    .header-actions .btn-glass {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      gap: 0;
+      min-width: 40px;
+      border-radius: 10px;
+    }
+    .header-actions .btn-glass .lucide-icon,
+    .header-actions .btn-glass i {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    .header-actions .btn-glass span {
+      display: none;
+    }
+
     /* Delicate Translucent Glass Divider between rows */
     .header-nav-divider {
       width: 100%;
@@ -4774,8 +4792,10 @@
             <span class="notification-badge" id="notif-badge-dot" style="display:none;"></span>
           </button>
 
-          <!-- Hidden proxy button for suggest (opened from Options dropdown) -->
-          <button id="btn-open-suggest" style="display:none;"></button>
+          <!-- Suggest Material Button (visible compact header action) -->
+          <button class="btn-glass" id="btn-open-suggest" title="Suggest Material" style="position:relative;">
+            <i data-lucide="lightbulb" class="lucide-icon"></i>
+          </button>
 
           <!-- Theme Picker Dropdown -->
           <div class="theme-picker">
