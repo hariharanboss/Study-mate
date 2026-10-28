@@ -1,5 +1,6 @@
 import { HTML_TEMPLATE } from './html.js';
 import { SW_CONTENT } from './sw-content.js';
+import { INTER_WOFF2, GEIST_WOFF2 } from './font-bytes.js';
 import DEFAULT_FILE_SYSTEM from './virtual-fs.default.js';
 
 const FS_INDEX_KEY = 'personal_lms_fs_index_v6';
@@ -199,6 +200,18 @@ export default {
     if (url.pathname === '/sw.js') {
       return new Response(SW_CONTENT, {
         headers: getSecurityHeaders('application/javascript;charset=UTF-8')
+      });
+    }
+
+
+    if (url.pathname === '/fonts/inter-latin.woff2' || url.pathname === '/fonts/geist-mono.woff2') {
+      const b64 = url.pathname.endsWith('inter-latin.woff2') ? INTER_WOFF2 : GEIST_WOFF2;
+      const binary = Uint8Array.from(atob(b64), (ch) => ch.charCodeAt(0));
+      return new Response(binary, {
+        headers: {
+          'content-type': 'font/woff2',
+          'cache-control': 'public, max-age=31536000, immutable'
+        }
       });
     }
 

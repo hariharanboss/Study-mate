@@ -13,13 +13,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%233b82f6'/%3E%3Cstop offset='100%25' stop-color='%231d4ed8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' transform='translate(4,4)'%3E%3Cpath d='m16 6 4 14'/%3E%3Cpath d='M12 6v14'/%3E%3Cpath d='M8 8v12'/%3E%3Cpath d='M4 4v16'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%233b82f6'/%3E%3Cstop offset='100%25' stop-color='%231d4ed8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' transform='translate(4,4)'%3E%3Cpath d='m16 6 4 14'/%3E%3Cpath d='M12 6v14'/%3E%3Cpath d='M8 8v12'/%3E%3Cpath d='M4 4v16'/%3E%3C/g%3E%3C/svg%3E" />
   
-  <!-- DM Sans Typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@1.63.0"></script>
 
   <style>
     /* ==========================================================================
@@ -4531,6 +4527,1080 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     }
 
 </style>
+<style id="v3-layer">
+/* @@P1-1 */
+@font-face{font-family:"Inter";font-style:normal;font-weight:100 900;font-display:swap;src:url("/fonts/inter-latin.woff2") format("woff2");}
+@font-face{font-family:"Geist Mono";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/geist-mono.woff2") format("woff2");}
+
+html[data-theme="dark"] {
+  --bg: #191919;
+  --side: #202020;
+  --hover: #252525;
+  --side-hover: #2c2c2c;
+  --sel: #2c2c2c;
+  --line: #2f2f2f;
+  --edge: #6b6b6b;
+  --text: #d4d4d4;
+  --strong: #e6e6e6;
+  --muted: #9b9b9b;
+  --link: #5ea7e8;
+  --btn: #2370c2;
+  --on-btn: #ffffff;
+  --callout: #252525;
+  --warn-bg: #3b3020;
+  --warn: #e8b65a;
+  --peek: #202020;
+  --scrim: rgba(0, 0, 0, 0.6);
+  --paper: #141414;
+  --pe-bg: #4a3020;
+  --pe: #f2b27c;
+  --emis-bg: #1e3a4e;
+  --emis: #8cc4ea;
+  --psa-bg: #48293b;
+  --psa: #eba0c4;
+  --lcs-bg: #233b2c;
+  --lcs: #8fd1a6;
+  --reg-bg: #373737;
+  --reg-k: #cfcfcf;
+}
+html[data-theme="amoled"] {
+  --bg: #000000;
+  --side: #0f0f0f;
+  --hover: #141414;
+  --side-hover: #1c1c1c;
+  --sel: #1c1c1c;
+  --line: #262626;
+  --edge: #666666;
+  --text: #d4d4d4;
+  --strong: #e6e6e6;
+  --muted: #9b9b9b;
+  --link: #5ea7e8;
+  --btn: #2370c2;
+  --on-btn: #ffffff;
+  --callout: #141414;
+  --warn-bg: #2e2618;
+  --warn: #e8b65a;
+  --peek: #0f0f0f;
+  --scrim: rgba(0, 0, 0, 0.7);
+  --paper: #000000;
+  --pe-bg: #4a3020;
+  --pe: #f2b27c;
+  --emis-bg: #1e3a4e;
+  --emis: #8cc4ea;
+  --psa-bg: #48293b;
+  --psa: #eba0c4;
+  --lcs-bg: #233b2c;
+  --lcs: #8fd1a6;
+  --reg-bg: #373737;
+  --reg-k: #cfcfcf;
+}
+html[data-theme="light"] {
+  --bg: #ffffff;
+  --side: #f7f7f5;
+  --hover: #f5f5f3;
+  --side-hover: #ededea;
+  --sel: #ededea;
+  --line: #eaeae7;
+  --edge: #8e8d89;
+  --text: #37352f;
+  --strong: #2b2a26;
+  --muted: #696864;
+  --link: #1a66b3;
+  --btn: #2370c2;
+  --on-btn: #ffffff;
+  --callout: #f1f1ef;
+  --warn-bg: #fbf3db;
+  --warn: #7f5300;
+  --peek: #ffffff;
+  --scrim: rgba(15, 15, 15, 0.35);
+  --paper: #f1f1ef;
+  --pe-bg: #fbe7d7;
+  --pe: #9a4a0b;
+  --emis-bg: #e1eef6;
+  --emis: #0e5f86;
+  --psa-bg: #f8e4ee;
+  --psa: #a2245f;
+  --lcs-bg: #e3efe5;
+  --lcs: #2d6a42;
+  --reg-bg: #ededeb;
+  --reg-k: #55534e;
+}
+html[data-theme="dark"],
+html[data-theme="amoled"],
+html[data-theme="light"] {
+  --bg-base: var(--bg);
+  --bg-surface: var(--side);
+  --bg-surface-hover: var(--hover);
+  --bg-card: var(--peek);
+  --bg-card-hover: var(--hover);
+  --bg-glass-modal: var(--peek);
+  --border-specular: var(--line);
+  --border-focus: var(--edge);
+  --border-accent: var(--line);
+  --shadow-glass: none;
+  --shadow-glow: transparent;
+  --text-main: var(--text);
+  --text-muted: var(--muted);
+  --text-subtle: var(--muted);
+  --accent-primary: var(--link);
+  --accent-gradient: var(--btn);
+  --accent-glow: transparent;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 12px;
+  --radius-full: 6px;
+  --blur-strength: 0px;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+html[data-theme] body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  letter-spacing: 0;
+}
+
+/* @@P1-2 */
+html[data-theme] .theme-dropdown .theme-opt {
+  --text-main: inherit;
+  --text-muted: inherit;
+  --text-subtle: inherit;
+  --bg-base: inherit;
+  --bg-surface: inherit;
+  --bg-surface-hover: inherit;
+  --bg-card: inherit;
+  --bg-card-hover: inherit;
+  --bg-glass-modal: inherit;
+  --border-specular: inherit;
+  --border-focus: inherit;
+  --accent-primary: inherit;
+  --accent-gradient: inherit;
+  --accent-glow: inherit;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 400;
+}
+html[data-theme] .theme-dropdown {
+  background: var(--peek);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: none;
+  padding: 4px;
+}
+html[data-theme] .theme-opt:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+html[data-theme] .theme-opt.active {
+  background: var(--sel);
+  color: var(--strong);
+  font-weight: 500;
+  border-color: transparent;
+}
+html[data-theme] #theme-icon-container svg,
+html[data-theme] .theme-opt svg {
+  color: var(--muted) !important;
+}
+html[data-theme] .theme-opt.active .opt-check {
+  color: var(--muted) !important;
+  opacity: 1;
+}
+
+/* @@P1-3 */
+html[data-theme="dark"] *,
+html[data-theme="amoled"] *,
+html[data-theme="light"] * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme] .ambient-mesh {
+  display: none !important;
+}
+html[data-theme] .brand-title span {
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: var(--strong);
+}
+html[data-theme] .btn-primary,
+html[data-theme] .gauge-bar-fill {
+  background: var(--btn) !important;
+  background-image: none !important;
+}
+html[data-theme] .btn-primary {
+  color: var(--on-btn) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+html[data-theme] .btn-primary:hover {
+  background: var(--btn) !important;
+  background-image: none !important;
+  filter: brightness(1.08);
+  box-shadow: none !important;
+  transform: none;
+}
+
+/* @@P1-4 */
+html[data-theme] .app-root {
+  max-width: 1440px;
+  padding: 0 32px 40px;
+}
+html[data-theme] .glass-header {
+  position: sticky;
+  top: 0;
+  margin: 0 -32px 16px;
+  width: auto;
+  padding: 8px 32px;
+  gap: 8px;
+  background: var(--bg);
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-theme] .header-nav-divider {
+  background: var(--line);
+}
+html[data-theme] .brand-logo {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 6px !important;
+  background: var(--strong) !important;
+  color: var(--bg) !important;
+  box-shadow: none !important;
+}
+html[data-theme] .brand-logo svg,
+html[data-theme] .brand-logo i {
+  color: var(--bg) !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+html[data-theme] .brand-area:hover .brand-logo {
+  transform: none;
+}
+html[data-theme] .brand-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--strong);
+  letter-spacing: 0;
+}
+html[data-theme] .header-search-wrapper .search-input {
+  height: 36px;
+  background: var(--hover);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  box-shadow: none;
+}
+html[data-theme] .header-search-wrapper .search-input::placeholder {
+  color: var(--muted);
+}
+html[data-theme] .header-search-wrapper .search-input:focus {
+  background: var(--hover);
+  border-color: var(--edge);
+  box-shadow: none;
+}
+html[data-theme] .header-search-wrapper .search-icon {
+  color: var(--muted);
+}
+html[data-theme] .btn-glass,
+html[data-theme] .btn-theme-toggle {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--muted);
+  box-shadow: none;
+}
+html[data-theme] .btn-glass:hover,
+html[data-theme] .btn-theme-toggle:hover {
+  background: var(--hover);
+  border-color: transparent;
+  color: var(--text);
+  transform: none;
+  box-shadow: none;
+}
+html[data-theme] .btn-glass:active,
+html[data-theme] .btn-theme-toggle:active {
+  transform: none;
+}
+
+/* @@P1-5 */
+html[data-theme] .pill {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 12px;
+  border-bottom: 2px solid transparent !important;
+}
+html[data-theme] .pill:hover {
+  color: var(--text);
+  border-color: transparent;
+  background: transparent !important;
+}
+html[data-theme] .pill.active {
+  background: transparent !important;
+  color: var(--strong) !important;
+  border-bottom: 2px solid var(--text) !important;
+  box-shadow: none !important;
+}
+html[data-theme] .category-and-controls-bar {
+  align-items: flex-end;
+  min-width: 0;
+}
+html[data-theme] .category-and-controls-bar .filter-pills {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-x: auto;
+}
+html[data-theme] .category-and-controls-bar .drive-view-controls {
+  flex-shrink: 0;
+}
+html[data-theme] .drive-sort-select {
+  height: 36px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: var(--font-body);
+}
+html[data-theme] .drive-sort-select:focus {
+  border-color: var(--link);
+  box-shadow: none;
+}
+html[data-theme] #filter-status-container > * {
+  background: var(--hover);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: none;
+  color: var(--text);
+}
+html[data-theme] .toolbar-more-dropdown,
+html[data-theme] .mobile-filter-dropdown {
+  background: var(--peek);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: none;
+}
+html[data-theme] .toolbar-menu-item {
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 400;
+}
+html[data-theme] .toolbar-menu-item:hover,
+html[data-theme] .mobile-filter-opt:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+html[data-theme] .toolbar-menu-shortcut {
+  font-family: var(--font-mono);
+  background: var(--hover);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+/* @@P1-6 */
+html[data-theme] .breadcrumbs-bar {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 4px 0 12px;
+  box-shadow: none;
+}
+html[data-theme] .crumb-item {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+html[data-theme] .crumb-item:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+html[data-theme] .crumb-item.current {
+  color: var(--text);
+  font-weight: 400;
+}
+html[data-theme] .crumb-divider {
+  color: var(--muted);
+  opacity: 0.7;
+}
+html[data-theme] .crumb-back-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font-weight: 400;
+}
+html[data-theme] .crumb-back-btn:hover,
+html[data-theme] .crumb-back-btn:active {
+  background: var(--hover);
+  transform: none;
+  border-color: var(--line);
+}
+
+/* @@P1-7 */
+html[data-theme] .explorer-section-header {
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  margin-top: 24px;
+}
+html[data-theme] .explorer-section-header svg,
+html[data-theme] .explorer-section-header i {
+  display: none !important;
+}
+html[data-theme] #explorer-grid:not(.list-view) {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+html[data-theme] .folder-card {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  min-height: 40px !important;
+  height: auto !important;
+  padding: 6px 8px !important;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+}
+html[data-theme] .folder-card:hover {
+  background: var(--hover);
+  transform: none !important;
+  border-color: transparent;
+  box-shadow: none !important;
+}
+html[data-theme] .folder-card .card-icon-box {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  order: 1;
+}
+html[data-theme] .folder-card .card-icon-box svg {
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--muted) !important;
+}
+html[data-theme] .folder-card .card-title {
+  order: 2;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--strong);
+  -webkit-line-clamp: 1;
+}
+html[data-theme] .folder-card > p {
+  order: 3;
+  margin: 0 !important;
+  text-align: left !important;
+  color: var(--muted) !important;
+  font-size: 13px !important;
+  flex: 1;
+  min-width: 0;
+}
+html[data-theme] .folder-card .card-tags-container {
+  order: 4;
+  margin: 0 !important;
+  justify-content: flex-end !important;
+}
+html[data-theme] .folder-card .folder-card-top-badges,
+html[data-theme] .folder-card .folder-card-top-actions {
+  position: static;
+  order: 5;
+  margin-left: auto;
+}
+html[data-theme] .folder-card:hover .card-icon-box {
+  transform: none;
+}
+
+/* @@P1-8 */
+html[data-theme] .explorer-card:not(.folder-card) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+}
+html[data-theme] .explorer-card:not(.folder-card):hover {
+  background: var(--hover);
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+html[data-theme] .explorer-card:not(.folder-card):active {
+  transform: none;
+}
+html[data-theme] .explorer-card.selected,
+html[data-theme] .folder-card.selected {
+  background: var(--sel) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-icon-box {
+  width: 20px;
+  height: 20px;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0;
+  box-shadow: none;
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-icon-box svg {
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--muted) !important;
+}
+html[data-theme] .explorer-card:hover .card-icon-box {
+  transform: none;
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-info {
+  min-width: 0;
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--strong);
+  margin: 0;
+  -webkit-line-clamp: 1;
+}
+html[data-theme] .card-meta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+html[data-theme] .card-footer > span {
+  display: none !important;
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-footer {
+  grid-column: 2;
+  grid-row: 1;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--muted);
+}
+html[data-theme] .explorer-card:not(.folder-card) .card-tags-container,
+html[data-theme] .explorer-card:not(.folder-card) > p {
+  grid-column: 1 / -1;
+}
+html[data-theme] .btn-action-icon {
+  color: var(--muted);
+  border-radius: 6px;
+}
+html[data-theme] .btn-action-icon:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+html[data-theme] .star-btn.starred,
+html[data-theme] .star-btn.starred svg {
+  color: var(--warn) !important;
+}
+html[data-theme] .star-btn.starred svg {
+  fill: var(--warn) !important;
+}
+html[data-theme] .star-btn:hover {
+  transform: none;
+  color: var(--warn);
+}
+html[data-theme] .items-grid.list-view {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  gap: 0;
+}
+html[data-theme] .list-header-row,
+html[data-theme] .list-row {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--line);
+}
+html[data-theme] .list-header-row {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--muted);
+}
+html[data-theme] .list-row:hover {
+  background: var(--hover);
+  border-color: transparent;
+  border-bottom-color: var(--line);
+}
+html[data-theme] .list-row.selected {
+  background: var(--sel) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+html[data-theme] .list-cell-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--strong);
+}
+html[data-theme] .list-cell-name svg {
+  color: var(--muted) !important;
+}
+html[data-theme] .list-header-row > div:nth-child(5),
+html[data-theme] .list-row > div:nth-child(5) {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  text-align: right;
+  color: var(--muted);
+}
+
+/* @@P1-9 */
+html[data-theme] .card-tag,
+html[data-theme] .badge-tag {
+  background: var(--reg-bg) !important;
+  color: var(--reg-k) !important;
+  border: none !important;
+  border-radius: 4px !important;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+html[data-theme] .context-tag {
+  max-width: 280px;
+  background: var(--reg-bg) !important;
+  color: var(--reg-k) !important;
+}
+html[data-theme] .context-tag svg,
+html[data-theme] .context-tag i {
+  display: none !important;
+}
+html[data-theme] .context-tag[title*="POWER ELECTRONICS"] {
+  background: var(--pe-bg) !important;
+  color: var(--pe) !important;
+}
+html[data-theme] .context-tag[title*="ELECTRICAL MEASUREMENTS"] {
+  background: var(--emis-bg) !important;
+  color: var(--emis) !important;
+}
+html[data-theme] .context-tag[title*="POWER SYSTEM ANALYSIS"] {
+  background: var(--psa-bg) !important;
+  color: var(--psa) !important;
+}
+html[data-theme] .context-tag[title*="LINEAR CONTROL"] {
+  background: var(--lcs-bg) !important;
+  color: var(--lcs) !important;
+}
+
+/* @@P1-10 */
+html[data-theme] .callout-card,
+html[data-theme] .sticky-note-card,
+html[data-theme] .study-callout-card {
+  background: var(--callout) !important;
+  background-image: none !important;
+  border: none !important;
+  border-left: none !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  color: var(--text);
+}
+html[data-theme] .callout-icon-box {
+  background: transparent !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+}
+html[data-theme] .callout-badge {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+  font-weight: 400;
+  background: transparent !important;
+  border: none !important;
+  color: var(--muted) !important;
+  padding: 0;
+}
+html[data-theme] .callout-title,
+html[data-theme] .sticky-title {
+  color: var(--strong);
+  font-weight: 600;
+  font-size: 15px;
+}
+html[data-theme] .callout-body,
+html[data-theme] .sticky-content,
+html[data-theme] .study-callout-card .callout-text {
+  color: var(--text) !important;
+  font-size: 15px;
+  line-height: 1.55;
+}
+html[data-theme] .callout-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+}
+html[data-theme] .callout-btn:hover {
+  background: var(--hover);
+  color: var(--text);
+  border-color: var(--line);
+}
+html[data-theme] .callout-card:has(svg[data-lucide="target"]),
+html[data-theme] .callout-card:has(svg[data-lucide="alert-triangle"]),
+html[data-theme] .callout-card:has(svg[data-lucide="triangle-alert"]) {
+  background: var(--warn-bg) !important;
+}
+html[data-theme] .callout-card:has(svg[data-lucide="target"]) .callout-icon-box,
+html[data-theme] .callout-card:has(svg[data-lucide="alert-triangle"]) .callout-icon-box,
+html[data-theme] .callout-card:has(svg[data-lucide="triangle-alert"]) .callout-icon-box,
+html[data-theme] .callout-card:has(svg[data-lucide="target"]) .callout-badge,
+html[data-theme] .callout-card:has(svg[data-lucide="alert-triangle"]) .callout-badge,
+html[data-theme] .callout-card:has(svg[data-lucide="triangle-alert"]) .callout-badge,
+html[data-theme] .callout-card:has(svg[data-lucide="target"]) .callout-title,
+html[data-theme] .callout-card:has(svg[data-lucide="alert-triangle"]) .callout-title,
+html[data-theme] .callout-card:has(svg[data-lucide="triangle-alert"]) .callout-title {
+  color: var(--warn) !important;
+}
+html[data-theme] .callout-link {
+  color: var(--link);
+}
+
+/* @@P1-11 */
+html[data-theme] .modal-overlay {
+  background: var(--scrim);
+}
+html[data-theme] .modal-glass {
+  background: var(--peek);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: none;
+  animation: none;
+}
+html[data-theme] .modal-overlay.show {
+  animation: none;
+}
+html[data-theme] .modal-header {
+  border-bottom: 1px solid var(--line);
+}
+html[data-theme] .modal-title {
+  color: var(--strong);
+  font-weight: 600;
+  font-size: 16px;
+}
+html[data-theme] .form-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted) !important;
+}
+html[data-theme] .form-control {
+  background: var(--bg) !important;
+  border: 1px solid var(--edge) !important;
+  border-radius: 6px;
+  color: var(--text) !important;
+  font-size: 14px;
+  box-shadow: none !important;
+}
+html[data-theme] .form-control:focus {
+  border-color: var(--link) !important;
+  box-shadow: none !important;
+}
+@media (min-width: 769px) {
+  html[data-theme] #modal-preview.show {
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: 0;
+  }
+  html[data-theme] #modal-preview .modal-glass {
+    width: 600px;
+    max-width: 600px;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    border-left: 1px solid var(--line);
+  }
+  html[data-theme] #modal-preview .modal-body {
+    background: var(--paper);
+    flex: 1;
+  }
+  html[data-theme] #modal-preview .pdf-viewer-container,
+  html[data-theme] #modal-preview iframe {
+    background: var(--paper);
+    width: 100%;
+    height: 100%;
+  }
+}
+@media (min-width: 1200px) {
+  html[data-theme] body:has(#modal-preview.show) .app-root {
+    margin-right: 600px;
+  }
+  html[data-theme] #modal-preview.show {
+    width: 600px;
+    left: auto;
+    right: 0;
+    background: transparent;
+  }
+}
+@media (max-width: 768px) {
+  html[data-theme] #modal-preview .modal-glass {
+    border-radius: 12px 12px 0 0 !important;
+    max-height: 88vh !important;
+  }
+  html[data-theme] #modal-preview .modal-header .btn-glass,
+  html[data-theme] #modal-preview .modal-close-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+html[data-theme] .empty-folder {
+  background: transparent;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  box-shadow: none;
+}
+html[data-theme] .empty-icon {
+  color: var(--muted);
+}
+html[data-theme] .empty-text {
+  color: var(--muted);
+  font-size: 15px;
+}
+html[data-theme] .toast {
+  background: var(--peek);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  box-shadow: none;
+}
+
+/* @@P1-12 */
+html[data-theme] svg.lucide {
+  stroke-width: 1.5;
+}
+html[data-theme] :focus-visible {
+  outline: 2px solid var(--link) !important;
+  outline-offset: 2px;
+}
+html[data-theme] .explorer-card,
+html[data-theme] .folder-card,
+html[data-theme] .list-row,
+html[data-theme] .pill,
+html[data-theme] .btn-glass,
+html[data-theme] .crumb-item,
+html[data-theme] .modal-glass {
+  transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1), color 150ms cubic-bezier(0.2, 0, 0, 1), border-color 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+@media (min-width: 769px) {
+  html[data-theme] #modal-preview .modal-glass {
+    transition: none;
+  }
+}
+@media (max-width: 768px) {
+  html[data-theme] .app-root {
+    max-width: 100% !important;
+    padding: 0 16px 24px !important;
+  }
+  html[data-theme] .glass-header {
+    top: 0 !important;
+    margin: 0 -16px 12px !important;
+    width: calc(100% + 32px) !important;
+    padding: 8px 16px !important;
+    border-radius: 0 !important;
+  }
+  html[data-theme] .brand-title span:last-child {
+    display: inline !important;
+  }
+  html[data-theme] .header-search-wrapper .search-input {
+    height: 44px !important;
+    border-radius: 6px !important;
+    font-size: 16px !important;
+  }
+  html[data-theme] .category-and-controls-bar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 44px;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  html[data-theme] .category-and-controls-bar .drive-view-controls {
+    display: contents !important;
+  }
+  html[data-theme] .mobile-filter-wrapper,
+  html[data-theme] .drive-sort-select,
+  html[data-theme] #toolbar-more-wrapper {
+    width: 100%;
+    min-width: 0;
+  }
+  html[data-theme] #toolbar-more-wrapper {
+    display: inline-block;
+  }
+  html[data-theme] .mobile-filter-btn,
+  html[data-theme] .drive-sort-select,
+  html[data-theme] #btn-toolbar-options {
+    width: 100%;
+    min-height: 44px !important;
+    height: 44px;
+    border-radius: 6px !important;
+    border: 1px solid var(--edge) !important;
+    background: var(--bg) !important;
+    justify-content: center;
+  }
+  html[data-theme] #btn-toolbar-options > span {
+    display: none !important;
+  }
+  html[data-theme] .items-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html[data-theme] .folder-card,
+  html[data-theme] .explorer-card:not(.folder-card) {
+    min-height: 48px !important;
+    border-radius: 6px !important;
+  }
+  html[data-theme] .breadcrumbs-bar {
+    border-radius: 0 !important;
+    padding: 4px 0 !important;
+  }
+  html[data-theme] .star-btn,
+  html[data-theme] .btn-action-icon {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] *,
+  html[data-theme] *::before,
+  html[data-theme] *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+html[data-theme] .v3-sidebar {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  left: 0;
+  width: 248px;
+  height: 100vh;
+  background: var(--side);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px 8px;
+}
+html[data-theme] .app-root {
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  margin-left: 248px;
+  margin-right: 0;
+}
+html[data-theme] .header-top-row,
+html[data-theme] .header-search-wrapper,
+html[data-theme] .header-actions,
+html[data-theme] .category-and-controls-bar {
+  min-width: 0;
+}
+html[data-theme] .v3-side-scroll {
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+html[data-theme] .v3-side-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 4px 8px;
+  margin: 1px 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+html[data-theme] .v3-side-branch { margin-left: calc(var(--depth, 0) * 12px); }
+html[data-theme] .v3-side-item:hover { background: var(--side-hover); }
+html[data-theme] .v3-side-item.is-current { color: var(--strong); font-weight: 500; background: var(--side-hover); }
+html[data-theme] .v3-side-item svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+html[data-theme] .v3-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; display: inline-block; }
+html[data-theme] .v3-dot-pe { background: var(--pe); }
+html[data-theme] .v3-dot-emis { background: var(--emis); }
+html[data-theme] .v3-dot-psa { background: var(--psa); }
+html[data-theme] .v3-dot-lcs { background: var(--lcs); }
+html[data-theme] .v3-dot-reg { background: var(--reg-k); }
+html[data-theme] .v3-side-foot { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--line); padding-top: 8px; }
+html[data-theme] .v3-side-open { display: none; }
+html[data-theme] .v3-sidebar-scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 35; }
+html[data-theme] .v3-page-header { display: flex; gap: 16px; align-items: flex-start; margin: 8px 0 20px; }
+html[data-theme] .v3-page-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+html[data-theme] .v3-page-icon svg { width: 28px; height: 28px; }
+html[data-theme] .v3-page-title { margin: 0; font-size: 36px; line-height: 1.15; font-weight: 700; color: var(--strong); letter-spacing: 0; }
+html[data-theme] .v3-page-desc { margin: 6px 0 0; color: var(--muted); font-size: 14px; max-width: 62ch; }
+html[data-theme] .v3-page-props { margin: 8px 0 0; color: var(--muted); font-size: 13px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+html[data-theme] .v3-count { margin-left: auto; color: var(--muted); font-family: var(--font-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+html[data-theme] .v3-kbd { font-family: var(--font-mono); font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; background: transparent; }
+html[data-theme] .v3-preview-props { display: grid; gap: 6px; padding: 8px 4px 12px; color: var(--text); font-size: 14px; }
+html[data-theme] .v3-preview-props div { display: flex; gap: 12px; }
+html[data-theme] .v3-preview-props dt { width: 88px; color: var(--muted); }
+html[data-theme] .v3-preview-mobile { padding: 24px; color: var(--text); }
+@media (max-width: 768px) {
+  html[data-theme] .v3-sidebar { transform: translateX(-105%); transition: transform 200ms cubic-bezier(0.2, 0, 0, 1); width: min(288px, 85vw); }
+  html[data-theme] .v3-sidebar.is-open { transform: none; z-index: 80; }
+  html[data-theme] .app-root { margin-left: 0 !important; }
+  html[data-theme] .v3-side-open { display: inline-flex !important; align-items: center; justify-content: center; width: 44px; height: 44px; border: none; background: transparent; color: var(--text); }
+  html[data-theme] .v3-page-title { font-size: 30px; }
+  html[data-theme] .v3-side-item { min-height: 40px; }
+  html[data-theme] .v3-kbd { display: none; }
+}
+@media (min-width: 1200px) {
+  html[data-theme] body:has(#modal-preview.show) .app-root { margin-right: 600px; }
+}
+
+</style>
 </head>
 <body>
 
@@ -4540,11 +5610,21 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     <div class="ambient-orb orb-2"></div>
   </div>
 
+  <aside id="v3-sidebar" class="v3-sidebar" aria-label="Folders">
+    <div class="v3-side-scroll" id="v3-sidebar-tree"></div>
+    <div class="v3-side-foot">
+      <button type="button" class="v3-side-item" id="v3-side-suggest"><i data-lucide="lightbulb"></i><span>Suggest a resource</span></button>
+      <button type="button" class="v3-side-item" id="v3-side-broadcasts"><i data-lucide="bell"></i><span>Broadcasts</span></button>
+      <button type="button" class="v3-side-item" id="v3-side-theme"><i data-lucide="moon"></i><span>Theme</span></button>
+    </div>
+  </aside>
+  <div id="v3-sidebar-scrim" class="v3-sidebar-scrim" hidden></div>
   <div class="app-root">
     <!-- Master Unified Navigation (Apple Glass Control Center) -->
     <header class="glass-header">
       <!-- Top Row: Brand Logo & Title | Centered Search Bar | Header Actions -->
       <div class="header-top-row">
+        <button type="button" id="btn-sidebar-open" class="v3-side-open" aria-label="Open menu"><i data-lucide="menu"></i></button>
         <div class="brand-area" id="btn-home" title="Go to Root">
           <div class="brand-logo">
             <i data-lucide="library" style="width:22px; height:22px;"></i>
@@ -4557,7 +5637,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         <!-- Centered Header Search Input -->
         <div class="header-search-wrapper">
           <i data-lucide="search" class="search-icon lucide-icon"></i>
-          <input type="text" class="search-input" id="search-input" placeholder="Search notes, PYQs, subjects, videos..." autocomplete="off" />
+          <input type="text" class="search-input" id="search-input" placeholder="Search notes, PYQs, subjects, videos..." aria-label="Search notes, papers and videos" autocomplete="off" />
+          <kbd class="v3-kbd" id="search-kbd">Ctrl K</kbd>
           <button id="search-clear-btn" style="display:none;" title="Clear search">
             <i data-lucide="x" style="width:14px; height:14px;"></i>
           </button>
@@ -4583,7 +5664,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           </button>
 
           <!-- Hidden proxy button for suggest (opened from Options dropdown) -->
-          <button id="btn-open-suggest" style="display:none;"></button>
+          <button type="button" class="btn-glass" id="btn-open-suggest" title="Suggest a resource"><i data-lucide="lightbulb" class="lucide-icon"></i><span>Suggest</span></button>
 
           <!-- Theme Picker Dropdown -->
           <div class="theme-picker">
@@ -4595,17 +5676,17 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             <div class="theme-dropdown" id="theme-menu" role="menu">
               <button type="button" class="theme-opt active" data-theme="dark" role="menuitem">
                 <i data-lucide="moon" class="lucide-icon" style="color:#38bdf8;"></i>
-                <span>Dark Mode</span>
+                <span>Dark</span>
                 <i data-lucide="check" class="opt-check" style="width:14px; height:14px; margin-left:auto; color:#38bdf8;"></i>
               </button>
               <button type="button" class="theme-opt" data-theme="amoled" role="menuitem">
                 <i data-lucide="smartphone" class="lucide-icon" style="color:#c084fc;"></i>
-                <span>OLED Black</span>
+                <span>OLED black</span>
                 <i data-lucide="check" class="opt-check" style="width:14px; height:14px; margin-left:auto; color:#c084fc;"></i>
               </button>
               <button type="button" class="theme-opt" data-theme="light" role="menuitem">
                 <i data-lucide="sun" class="lucide-icon" style="color:#f59e0b;"></i>
-                <span>Clean Light</span>
+                <span>Light</span>
                 <i data-lucide="check" class="opt-check" style="width:14px; height:14px; margin-left:auto; color:#f59e0b;"></i>
               </button>
             </div>
@@ -4622,17 +5703,17 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         <div class="mobile-filter-wrapper" id="mobile-filter-wrapper">
           <button type="button" class="btn-glass mobile-filter-btn" id="btn-mobile-filter" title="Filter by Category" aria-label="Filter Materials">
             <i data-lucide="layers" class="lucide-icon" style="color:var(--accent-primary); width:15px; height:15px;"></i>
-            <span id="mobile-filter-active-text" style="font-weight:600;">All Materials</span>
+            <span id="mobile-filter-active-text" style="font-weight:600;">All materials</span>
             <i data-lucide="chevron-down" style="width:13px; height:13px; opacity:0.6; margin-left:4px;"></i>
           </button>
           <div class="mobile-filter-dropdown" id="mobile-filter-menu" role="menu">
             <button type="button" class="mobile-filter-opt active" data-filter="all" role="menuitem">
               <i data-lucide="layers" class="lucide-icon"></i>
-              <span>All Materials</span>
+              <span>All materials</span>
             </button>
             <button type="button" class="mobile-filter-opt" data-filter="starred" role="menuitem">
               <i data-lucide="star" class="lucide-icon" style="color:#f59e0b;"></i>
-              <span>⭐ Starred</span>
+              <span>Starred</span>
             </button>
             <button type="button" class="mobile-filter-opt" data-filter="notes" role="menuitem">
               <i data-lucide="book-open" class="lucide-icon"></i>
@@ -4640,15 +5721,15 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             </button>
             <button type="button" class="mobile-filter-opt" data-filter="pyq" role="menuitem">
               <i data-lucide="file-question" class="lucide-icon"></i>
-              <span>PYQ Papers</span>
+              <span>PYQ papers</span>
             </button>
             <button type="button" class="mobile-filter-opt" data-filter="video" role="menuitem">
               <i data-lucide="play-circle" class="lucide-icon"></i>
-              <span>YouTube Solutions</span>
+              <span>YouTube solutions</span>
             </button>
             <button type="button" class="mobile-filter-opt" data-filter="lab" role="menuitem">
               <i data-lucide="flask-conical" class="lucide-icon"></i>
-              <span>Lab Manuals & Viva</span>
+              <span>Lab manuals and viva</span>
             </button>
           </div>
         </div>
@@ -4657,11 +5738,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         <div class="filter-pills" id="filter-pills">
           <button class="pill active" data-filter="all">
             <i data-lucide="layers" class="lucide-icon"></i>
-            <span>All Materials</span>
+            <span>All materials</span>
           </button>
           <button class="pill" data-filter="starred" id="pill-filter-starred">
             <i data-lucide="star" class="lucide-icon" style="color:#f59e0b;"></i>
-            <span>⭐ Starred</span>
+            <span>Starred</span>
           </button>
           <button class="pill" data-filter="notes">
             <i data-lucide="book-open" class="lucide-icon"></i>
@@ -4669,15 +5750,15 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           </button>
           <button class="pill" data-filter="pyq">
             <i data-lucide="file-question" class="lucide-icon"></i>
-            <span>PYQ Papers</span>
+            <span>PYQ papers</span>
           </button>
           <button class="pill" data-filter="video">
             <i data-lucide="play-circle" class="lucide-icon"></i>
-            <span>YouTube Solutions</span>
+            <span>YouTube solutions</span>
           </button>
           <button class="pill" data-filter="lab">
             <i data-lucide="flask-conical" class="lucide-icon"></i>
-            <span>Lab Manuals & Viva</span>
+            <span>Lab manuals and viva</span>
           </button>
         </div>
 
@@ -4695,7 +5776,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
           <!-- Consolidated Options Slide-Down Menu -->
           <div class="toolbar-more-menu-wrapper" id="toolbar-more-wrapper">
-            <button type="button" class="btn-glass" id="btn-toolbar-options" title="View Options & Tools" style="padding:6px 12px; gap:6px;">
+            <button type="button" class="btn-glass" id="btn-toolbar-options" title="View Options & Tools" aria-label="Options" style="padding:6px 12px; gap:6px;">
               <i data-lucide="sliders-horizontal" class="lucide-icon" style="width:14px; height:14px;"></i>
               <span style="font-size:0.82rem; font-weight:500;">Options</span>
               <i data-lucide="chevron-down" style="width:12px; height:12px; opacity:0.6;"></i>
@@ -4768,6 +5849,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
     <!-- Liquid Breadcrumb Navigation Bar (Windows Explorer Style) -->
     <nav class="breadcrumbs-bar" id="breadcrumbs-container" style="display:none; margin-bottom:16px;"></nav>
+    <div id="page-header" class="v3-page-header"></div>
 
     <!-- Main Explorer Grid (Folders & Study Materials) -->
     <main class="items-grid" id="explorer-grid">
@@ -4861,11 +5943,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           Share staff notes, question papers, or YouTube playlists with your classmates. Submissions are reviewed by the admin.
         </p>
         <div class="form-group">
-          <label class="form-label">Subject Name / Code *</label>
+          <label class="form-label" for="sug-subject">Subject Name / Code *</label>
           <input type="text" id="sug-subject" class="form-control" placeholder="e.g. Power System Analysis / EE3501" required />
         </div>
         <div class="form-group">
-          <label class="form-label">Section</label>
+          <label class="form-label" for="sug-section">Section</label>
           <select id="sug-section" class="form-control">
             <option value="ALL">Both Sections (Common)</option>
             <option value="A">Section A Staff Material</option>
@@ -4873,19 +5955,19 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Topic / Unit</label>
+          <label class="form-label" for="sug-topic">Topic / Unit</label>
           <input type="text" id="sug-topic" class="form-control" placeholder="e.g. Unit 3 Load Flow Solved Problems" />
         </div>
         <div class="form-group">
-          <label class="form-label">Material Link (Google Drive, YouTube, or Website)</label>
+          <label class="form-label" for="sug-link">Material Link (Google Drive, YouTube, or Website)</label>
           <input type="url" id="sug-link" class="form-control" placeholder="https://drive.google.com/... or https://youtube.com/..." />
         </div>
         <div class="form-group">
-          <label class="form-label">Note / Message to Admin</label>
+          <label class="form-label" for="sug-note">Note / Message to Admin</label>
           <textarea id="sug-note" class="form-control" placeholder="Add any details, exam weightage, or who provided the note..."></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">Your Name (Optional)</label>
+          <label class="form-label" for="sug-name">Your Name (Optional)</label>
           <input type="text" id="sug-name" class="form-control" placeholder="Anonymous or Your Name" />
         </div>
       </div>
@@ -4974,6 +6056,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             <span id="preview-header-copy-text">Copy Code</span>
           </button>
           <!-- Open in New Tab Button -->
+          <button type="button" class="btn-glass" id="preview-star-btn" title="Star this file"><i data-lucide="star" class="lucide-icon"></i></button>
           <a href="#" target="_blank" class="btn-glass" id="preview-new-tab-btn" style="font-size:0.82rem; padding:6px 14px;" title="Open document in a separate browser tab">
             <i data-lucide="external-link" class="lucide-icon"></i>
             <span>Open in New Tab</span>
@@ -4989,6 +6072,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         </div>
       </div>
       <div class="modal-body" style="padding:10px; height:100%;">
+        <dl class="v3-preview-props" id="preview-properties"></dl>
         <div class="pdf-viewer-container" id="preview-embed-container">
           <!-- Dynamic Iframe / Embed for PDF or Image -->
         </div>
@@ -6312,7 +7396,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         contextMenuItemId: null,
         draggedItemId: null,
         moveTargetFolderId: null,
-        viewMode: localStorage.getItem('study_mate_view_mode') || 'grid',
+        viewMode: localStorage.getItem('study_mate_view_mode') || 'list',
         sortBy: localStorage.getItem('study_mate_sort_by') || 'name_asc',
         starredIds: new Set(initialStarred),
         selectedItemId: null,
@@ -6379,11 +7463,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         els.html.setAttribute('data-theme', theme);
         localStorage.setItem('dept_lms_theme', theme);
 
-        const colors = { dark: '#08090d', amoled: '#000000', light: '#f1f5f9' };
+        const colors = { dark: '#191919', amoled: '#000000', light: '#FFFFFF' };
         const iconConfigs = {
-          dark: { icon: 'moon', color: '#38bdf8' },
-          amoled: { icon: 'smartphone', color: '#c084fc' },
-          light: { icon: 'sun', color: '#f59e0b' }
+          dark: { icon: 'moon', color: 'var(--muted)' },
+          amoled: { icon: 'smartphone', color: 'var(--muted)' },
+          light: { icon: 'sun', color: 'var(--muted)' }
         };
         const cfg = iconConfigs[theme] || iconConfigs.dark;
 
@@ -6469,11 +7553,204 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       // ==========================================================================
       // RENDER FUNCTIONS
       // ==========================================================================
+
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function toDisplayTitle(raw) {
+        const text = String(raw || '');
+        return text.replace(/[A-Za-z][A-Za-z']*/g, (word, offset) => {
+          const around = text.slice(Math.max(0, offset - 1), offset + word.length + 1);
+          if (around.startsWith('(') && around.endsWith(')')) return word;
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+      }
+
+      function displayName(item) {
+        const raw = (item && item.name) || '';
+        if (item && item.type !== 'folder') {
+          const paper = raw.match(/^QP-(\\d{4})-([A-Za-z]+)\\/([A-Za-z]+)$/);
+          if (paper) {
+            const nice = (part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+            return nice(paper[2]) + '/' + nice(paper[3]) + ' ' + paper[1];
+          }
+          return raw;
+        }
+        return toDisplayTitle(raw);
+      }
+
+      function subjectInfoFromNames(names) {
+        const blob = (names || []).join(' › ');
+        const upper = blob.toUpperCase();
+        const table = [
+          ['POWER ELECTRONICS', 'pe', 'Power Electronics'],
+          ['ELECTRICAL MEASUREMENTS', 'emis', 'EMIS'],
+          ['POWER SYSTEM ANALYSIS', 'psa', 'PSA'],
+          ['LINEAR CONTROL', 'lcs', 'LCS'],
+          ['REGULATION', 'reg', 'Regulations']
+        ];
+        for (const row of table) {
+          if (upper.includes(row[0])) return { key: row[1], short: row[2], full: blob };
+        }
+        return null;
+      }
+
+      function subjectForItem(item) {
+        const names = [];
+        if (state.currentPath) names.push(...state.currentPath.map(part => part.name));
+        if (item && item._contextPath) names.push(item._contextPath);
+        if (item && item.name) names.push(item.name);
+        return subjectInfoFromNames(names);
+      }
+
+      function shortTypeLabel(item, fileInfo) {
+        if (!item) return 'File';
+        if (item.type === 'folder') return 'Folder';
+        if (fileInfo && fileInfo.category === 'youtube') return 'Video';
+        if (fileInfo && fileInfo.category === 'pdf') return 'PDF';
+        if (fileInfo && fileInfo.ext) return String(fileInfo.ext).toUpperCase();
+        return (fileInfo && fileInfo.label) || 'File';
+      }
+
+      function folderCountLabel(item) {
+        const children = (item && item.children) || [];
+        const files = children.filter(child => child.type !== 'folder').length;
+        const folders = children.length - files;
+        if (children.length === 0) return 'Empty';
+        if (folders === 0) return files + (files === 1 ? ' paper' : ' papers');
+        if (files === 0) return folders + (folders === 1 ? ' folder' : ' folders');
+        return children.length + ' items';
+      }
+
+      function closeSidebar() {
+        const side = document.getElementById('v3-sidebar');
+        const scrim = document.getElementById('v3-sidebar-scrim');
+        if (side) side.classList.remove('is-open');
+        if (scrim) scrim.hidden = true;
+      }
+
+      function openSidebar() {
+        const side = document.getElementById('v3-sidebar');
+        const scrim = document.getElementById('v3-sidebar-scrim');
+        if (side) side.classList.add('is-open');
+        if (scrim) scrim.hidden = false;
+      }
+
+      function renderSidebar() {
+        const host = document.getElementById('v3-sidebar-tree');
+        if (!host || !state.fsTree) return;
+        const current = state.currentFolderId;
+        function branch(node, depth) {
+          if (!node || !node.children) return '';
+          return node.children.filter(child => child.type === 'folder').map(folder => {
+            const info = subjectInfoFromNames([folder.name]);
+            const mark = info
+              ? '<i class="v3-dot v3-dot-' + info.key + '"></i>'
+              : '<i data-lucide="folder"></i>';
+            const currentClass = folder.id === current ? ' is-current' : '';
+            return '<div class="v3-side-branch" style="--depth:' + depth + '">'
+              + '<button type="button" class="v3-side-item' + currentClass + '" data-side-id="' + folder.id + '">'
+              + mark + '<span>' + escapeHtml(toDisplayTitle(folder.name)) + '</span></button>'
+              + branch(folder, depth + 1)
+              + '</div>';
+          }).join('');
+        }
+        const homeClass = current === 'root' && state.currentFilter !== 'starred' ? ' is-current' : '';
+        const starClass = state.currentFilter === 'starred' ? ' is-current' : '';
+        host.innerHTML = ''
+          + '<button type="button" class="v3-side-item' + homeClass + '" data-side-id="root"><i data-lucide="home"></i><span>Home</span></button>'
+          + '<button type="button" class="v3-side-item' + starClass + '" data-side-filter="starred"><i data-lucide="star"></i><span>Starred</span></button>'
+          + branch(state.fsTree, 0);
+        host.querySelectorAll('[data-side-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            closeSidebar();
+            if (state.currentFilter !== 'all') setActiveFilter('all', 'All materials');
+            navigateToFolder(btn.dataset.sideId);
+          });
+        });
+        const starBtn = host.querySelector('[data-side-filter="starred"]');
+        if (starBtn) {
+          starBtn.addEventListener('click', () => {
+            closeSidebar();
+            if (state.currentFolderId !== 'root') navigateToFolder('root');
+            setActiveFilter('starred', 'Starred');
+          });
+        }
+        refreshIcons();
+      }
+
+      function renderPageHeader() {
+        const el = document.getElementById('page-header');
+        if (!el || !state.fsTree) return;
+        const folder = findNodeById(state.fsTree, state.currentFolderId);
+        if (!folder) {
+          el.innerHTML = '';
+          return;
+        }
+        const title = toDisplayTitle(folder.name || 'Study Mate');
+        const desc = folder.description ? '<p class="v3-page-desc">' + escapeHtml(folder.description) + '</p>' : '';
+        const subject = subjectForItem(folder);
+        const parent = (state.currentPath || []).slice(0, -1).map(part => toDisplayTitle(part.name)).join(' › ');
+        const props = state.currentFolderId === 'root' ? '' : (
+          '<p class="v3-page-props">'
+          + (subject ? '<span>Subject</span><span class="card-tag context-tag" title="' + escapeHtml(subject.full) + '">' + escapeHtml(subject.short) + '</span>' : '')
+          + (parent ? '<span>In ' + escapeHtml(parent) + '</span>' : '')
+          + '</p>'
+        );
+        el.innerHTML = '<div class="v3-page-icon"><i data-lucide="' + (state.currentFolderId === 'root' ? 'library' : 'folder') + '"></i></div>'
+          + '<div><h1 class="v3-page-title">' + escapeHtml(title) + '</h1>' + desc + props + '</div>';
+        refreshIcons();
+      }
+
+      function showMissingFolder(folderId) {
+        state.currentFolderId = folderId;
+        state.currentPath = [];
+        if (els.breadcrumbs) {
+          els.breadcrumbs.style.display = 'none';
+          els.breadcrumbs.innerHTML = '';
+        }
+        const header = document.getElementById('page-header');
+        if (header) header.innerHTML = '';
+        if (els.explorerGrid) {
+          els.explorerGrid.innerHTML = '<div class="empty-folder"><div class="empty-icon"><i data-lucide="folder-open" style="width:48px;height:48px;"></i></div><div class="empty-text">Folder not found.</div><button type="button" class="btn-glass" id="btn-missing-home">Back to home</button></div>';
+          const home = document.getElementById('btn-missing-home');
+          if (home) home.addEventListener('click', () => navigateToFolder('root'));
+        }
+        renderSidebar();
+        refreshIcons();
+      }
+
+      function fillPreviewChrome(item, fileInfo) {
+        const props = document.getElementById('preview-properties');
+        const starBtn = document.getElementById('preview-star-btn');
+        if (props) {
+          const subject = subjectForItem(item);
+          const folderName = (state.currentPath && state.currentPath.length) ? state.currentPath[state.currentPath.length - 1].name : '';
+          const sizeText = formatFileSize(item.fileSize) || '—';
+          props.innerHTML = '<div><dt>Subject</dt><dd>' + escapeHtml(subject ? subject.short : '—') + '</dd></div>'
+            + '<div><dt>Folder</dt><dd>' + escapeHtml(toDisplayTitle(folderName)) + '</dd></div>'
+            + '<div><dt>Type</dt><dd>' + escapeHtml(shortTypeLabel(item, fileInfo)) + '</dd></div>'
+            + '<div><dt>Size</dt><dd>' + escapeHtml(sizeText) + '</dd></div>'
+            + '<div><dt>File name</dt><dd>' + escapeHtml(item.name || '') + '</dd></div>';
+        }
+        if (starBtn) {
+          starBtn.classList.toggle('starred', state.starredIds.has(item.id));
+          starBtn.onclick = (event) => {
+            toggleItemStar(item.id, event);
+            starBtn.classList.toggle('starred', state.starredIds.has(item.id));
+          };
+        }
+      }
+
       function renderBreadcrumbs() {
         const path = buildPathToNode(state.fsTree, state.currentFolderId) || [{ id: 'root', name: 'Study Mate' }];
         state.currentPath = path;
-
-
+        renderPageHeader();
 
         // Render Windows Explorer-Style Breadcrumbs Trail
         if (els.breadcrumbs) {
@@ -6738,11 +8015,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       // CATEGORY FILTER & RECURSIVE MATERIAL DISCOVERY ENGINE
       // ==========================================================================
       const FILTER_LABELS = {
-        all: 'All Materials',
+        all: 'All materials',
         notes: 'Notes (Sec A & B)',
-        pyq: 'PYQ Question Papers',
-        video: 'YouTube Solutions',
-        lab: 'Lab Manuals & Viva'
+        pyq: 'PYQ papers',
+        video: 'YouTube solutions',
+        lab: 'Lab manuals and viva'
       };
 
       function matchesCategory(item, filter) {
@@ -6963,7 +8240,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                 </div>
                 <button class="btn-clear-pill-filter" id="btn-clear-category-filter">
                   <i data-lucide="x" style="width:13px; height:13px;"></i>
-                  <span>Show All Materials</span>
+                  <span>Show all materials</span>
                 </button>
               </div>
             \`;
@@ -6986,12 +8263,16 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           const filterLabel = FILTER_LABELS[state.currentFilter] || 'study materials';
           const globalMatches = isFilterActive ? getCategoryItems(state.fsTree, state.currentFilter) : [];
 
+          const calloutsHtml = renderFolderCalloutsHtml(currentFolder);
+          const emptySentence = (!isFilterActive && state.searchQuery.trim() === '')
+            ? 'This folder is empty.'
+            : \`No \${filterLabel} found inside "\${currentFolder.name}".\`;
           els.explorerGrid.innerHTML = \`
             <div class="empty-folder">
               <div class="empty-icon">
                 <i data-lucide="\${isFilterActive ? 'search-x' : 'folder-open'}" style="width:48px; height:48px;"></i>
               </div>
-              <div class="empty-text">No \${filterLabel} found inside "\${currentFolder.name}".</div>
+              <div class="empty-text">\${emptySentence}</div>
               <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
                 \${isFilterActive && state.currentFolderId !== 'root' && globalMatches.length > 0 ? \`
                   <button class="btn-glass btn-primary" id="btn-search-all-categories">
@@ -7002,17 +8283,19 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                 \${isFilterActive ? \`
                   <button class="btn-glass" id="btn-reset-category">
                     <i data-lucide="layers" class="lucide-icon"></i>
-                    <span>Show All Materials</span>
+                    <span>Show all materials</span>
                   </button>
                 \` : \`
                   <button class="btn-glass" id="btn-empty-suggest">
                     <i data-lucide="lightbulb" class="lucide-icon"></i>
-                    <span>Suggest Material for this Subject</span>
+                    <span>Suggest material for this folder</span>
                   </button>
                 \`}
               </div>
             </div>
+            <div style="grid-column:1 / -1; width:100%; margin-top:20px;">\${calloutsHtml}</div>
           \`;
+          bindCalloutHandlers();
           const btnSearchAll = document.getElementById('btn-search-all-categories');
           if (btnSearchAll) {
             btnSearchAll.addEventListener('click', () => {
@@ -7066,8 +8349,10 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           let iconName = fileInfo.icon;
           let iconColor = fileInfo.color;
 
-          const sizeText = isFolder ? \`\${(item.children || []).length} items\` : (formatFileSize(item.fileSize) || 'Link');
-          const categoryText = isFolder ? 'Folder' : (FILTER_LABELS[item.category] || item.category || 'General');
+          const sizeText = isFolder ? folderCountLabel(item) : (formatFileSize(item.fileSize) || 'Link');
+          const subjectInfo = subjectForItem(item);
+          const subjectText = subjectInfo ? subjectInfo.short : '—';
+          const typeText = shortTypeLabel(item, fileInfo);
 
           return \`
             <div class="list-row \${isSelected ? 'selected' : ''} \${isCut}" data-id="\${item.id}" data-type="\${item.type}" \${isDraggable} tabindex="0">
@@ -7076,13 +8361,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
               </button>
               <div class="list-cell-name">
                 <i data-lucide="\${iconName}" style="width:18px; height:18px; color:\${iconColor}; flex-shrink:0;"></i>
-                <span class="truncate" style="font-weight:500;">\${item.name}</span>
+                <span class="truncate" style="font-weight:500;" title="\${item.name}">\${displayName(item)}</span>
               </div>
               <div>
-                <span class="card-tag" style="font-size:0.75rem;">\${categoryText}</span>
+                <span class="card-tag context-tag" title="\${subjectInfo ? subjectInfo.full : ''}">\${subjectText}</span>
               </div>
               <div class="truncate">
-                \${(item.tags && item.tags.length > 0) ? item.tags.map(t => \`<span class="badge-tag" style="font-size:0.68rem; margin-right:4px;">\${t}</span>\`).join('') : '<span style="color:var(--text-subtle); font-size:0.75rem;">—</span>'}
+                <span style="color:var(--text-muted); font-size:0.78rem;">\${typeText}</span>
               </div>
               <div style="font-size:0.78rem; color:var(--text-muted);">
                 \${sizeText}
@@ -7145,7 +8430,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                   <i data-lucide="\${lucideName}" style="width:26px; height:26px;"></i>
                 </div>
 
-                <div class="card-title" title="\${item.name}">\${item.name}</div>
+                <div class="card-title" title="\${item.name}">\${displayName(item)}</div>
+                \${isFolder ? \`<span class="v3-count">\${folderCountLabel(item)}</span>\` : ''}
 
                 \${(item.tags && item.tags.length > 0) ? \`
                   <div class="card-tags-container" style="justify-content:center; margin-top:6px;">
@@ -7167,11 +8453,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                   <i data-lucide="\${lucideName}" style="width:24px; height:24px;"></i>
                 </div>
                 <div class="card-info" style="min-width:0;">
-                  <div class="card-title" title="\${item.name}">\${item.name}</div>
+                  <div class="card-title" title="\${item.name}">\${displayName(item)}</div>
                   <div class="card-meta">
                     <span>\${fileSizeText}</span>
                     \${item.section && item.section !== 'ALL' ? \`<span class="card-tag">Sec \${item.section}</span>\` : ''}
-                    \${item._contextPath ? \`<span class="card-tag context-tag" title="\${item._contextPath}"><i data-lucide="folder" style="width:10px; height:10px;"></i> \${item._contextPath}</span>\` : ''}
+                    \${item._contextPath ? \`<span class="card-tag context-tag" title="\${item._contextPath}">\${(subjectForItem(item) || {}).short || item._contextPath}</span>\` : ''}
                   </div>
                 </div>
                 <button class="star-btn \${isStarred ? 'starred' : ''}" data-star-id="\${item.id}" title="\${isStarred ? 'Remove from Starred' : 'Add to Starred'}">
@@ -7234,8 +8520,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             <div class="list-header-row">
               <div></div>
               <div>Name</div>
-              <div>Category</div>
-              <div>Tags</div>
+              <div>Subject</div>
+              <div>Type</div>
               <div>Size / Date</div>
               <div style="text-align:right;">Actions</div>
             </div>
@@ -7259,7 +8545,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
               <div class="explorer-section-header">
                 <div class="explorer-section-header-left">
                   <i data-lucide="file-text" style="width:16px; height:16px; color:var(--accent-primary);"></i>
-                  <span>Files & Study Materials</span>
+                  <span>Files</span>
                 </div>
               </div>
             \` + headerHtml + fileItems.map(renderListRow).join('');
@@ -7289,7 +8575,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
               <div class="explorer-section-header">
                 <div class="explorer-section-header-left">
                   <i data-lucide="file-text" style="width:16px; height:16px; color:var(--accent-primary);"></i>
-                  <span>Files & Study Materials</span>
+                  <span>Files</span>
                 </div>
               </div>
             \` + fileItems.map(renderGridCard).join('');
@@ -7301,7 +8587,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           els.explorerGrid.innerHTML = outputHtml;
         } // End Grid View conditional
 
-        // Attach Callout Event Handlers
+        function bindCalloutHandlers() {
         els.explorerGrid.querySelectorAll('.btn-customize-callout').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -7356,6 +8642,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             showToast('Note removed', 'info');
           });
         });
+        }
+        bindCalloutHandlers();
 
         // Admin Drag-and-Drop Handlers for Cards and Rows (Google Drive style fluid drag & drop)
         if (state.isAdmin) {
@@ -7492,6 +8780,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       // NAVIGATION & RESOURCE VIEWING WITH ZERO-GLITCH HISTORY ENGINE
       // ==========================================================================
       function navigateToFolder(folderId, pushHistory = true) {
+        if (folderId !== 'root' && state.fsTree && !findNodeById(state.fsTree, folderId)) {
+          if (pushHistory) {
+            window.history.pushState({ folderId, isModal: false }, '', '#/folder/' + folderId);
+          }
+          showMissingFolder(folderId);
+          return;
+        }
         state.currentFolderId = folderId;
         state.searchQuery = '';
         els.searchInput.value = '';
@@ -7503,6 +8798,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
         renderBreadcrumbs();
         renderExplorerGrid();
+        renderSidebar();
         purgeExpiredRecycleBinItems();
         updateRecycleBinBadge();
         purgeExpiredRecycleBinItems();
@@ -7713,9 +9009,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         // Select item on single click (Windows Explorer highlight)
         selectItem(itemId);
 
-        // Mobile / Touch devices: Single tap opens immediately
+        // Visitors open on a single click. Admins keep select, and still open on a double-click.
         const isTouchOrMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
-        if (isTouchOrMobile) {
+        if (isTouchOrMobile || !state.isAdmin) {
           if (item.type === 'folder') {
             navigateToFolder(item.id);
           } else {
@@ -7726,6 +9022,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
       // Desktop View: Double-click to open folder or launch file viewer (Windows 10/11 Explorer Standard)
       els.explorerGrid.addEventListener('dblclick', (e) => {
+        if (!state.isAdmin) return;
         // Prevent opening if double-clicking an action button
         if (e.target.closest('button, .star-btn, .btn-card-more, .btn-item-rename, .btn-item-tag, .btn-item-delete')) {
           return;
@@ -7791,6 +9088,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
         activeCurrentResourceItem = item;
         activeCurrentResourceFileInfo = fileInfo;
+        fillPreviewChrome(item, fileInfo);
 
         // 2. Code & Plain Text Viewer (.py, .m, .cc, .cpp, .c, .h, .java, etc.)
         if (fileInfo.category === 'code' || fileInfo.category === 'text') {
@@ -8076,9 +9374,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
         // 6. PDF Documents & Default Embeds
         if (fileInfo.category === 'pdf' || item.url.toLowerCase().endsWith('.pdf')) {
+          if (window.innerWidth < 768) {
+            container.innerHTML = '<div class="v3-preview-mobile">Open or download this file. The preview stays off the small screen.</div>';
+          } else {
           container.innerHTML = \`
             <iframe src="\${item.url}#toolbar=1" title="\${item.name}" style="width:100%; height:100%; min-height:640px; border:none;"></iframe>
           \`;
+          }
           openModal('modal-preview');
           refreshIcons();
           return;
@@ -8394,6 +9696,14 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
       // Power-User Keyboard Shortcuts (Google Drive Standard)
       window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+          e.preventDefault();
+          if (els.searchInput) {
+            els.searchInput.focus();
+            els.searchInput.select();
+          }
+          return;
+        }
         // Ignore if user is typing in form inputs, textareas, or modals
         const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
         if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
@@ -8540,6 +9850,25 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       });
 
       // Suggest Material Button
+      const sideSuggest = document.getElementById('v3-side-suggest');
+      if (sideSuggest) sideSuggest.addEventListener('click', () => document.getElementById('btn-open-suggest').click());
+      const sideBroadcasts = document.getElementById('v3-side-broadcasts');
+      if (sideBroadcasts) sideBroadcasts.addEventListener('click', () => {
+        closeSidebar();
+        const bell = document.getElementById('btn-notifications');
+        if (bell) bell.click();
+      });
+      const sideTheme = document.getElementById('v3-side-theme');
+      if (sideTheme) sideTheme.addEventListener('click', () => {
+        const order = ['dark', 'amoled', 'light'];
+        const next = order[(order.indexOf(state.activeTheme) + 1) % order.length];
+        setTheme(next);
+      });
+      const sideOpen = document.getElementById('btn-sidebar-open');
+      if (sideOpen) sideOpen.addEventListener('click', openSidebar);
+      const sideScrim = document.getElementById('v3-sidebar-scrim');
+      if (sideScrim) sideScrim.addEventListener('click', closeSidebar);
+
       document.getElementById('btn-open-suggest').addEventListener('click', () => {
         const path = state.currentPath;
         if (path.length >= 4) {
@@ -12595,8 +13924,19 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             // Register initial history state
             window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', window.location.hash || '#/');
 
-            renderBreadcrumbs();
-            renderExplorerGrid();
+            if ((window.location.hash || '').startsWith('#/folder/')) {
+              const targetId = (window.location.hash || '').replace('#/folder/', '').split('?')[0].trim();
+              if (!findNodeById(state.fsTree, targetId)) {
+                showMissingFolder(targetId);
+              } else {
+                renderBreadcrumbs();
+                renderExplorerGrid();
+              }
+            } else {
+              renderBreadcrumbs();
+              renderExplorerGrid();
+            }
+            renderSidebar();
           } else {
             showToast('Failed to load file tree', 'error');
           }
