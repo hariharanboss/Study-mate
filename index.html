@@ -1307,6 +1307,60 @@
         padding: 5px 10px !important;
         gap: 4px !important;
       }
+
+      /* ==========================================================================
+         Document Preview Modal - Mobile Layout Fixes
+         ========================================================================== */
+      /* Force preview modal to stay centered & full-width instead of bottom-sheet */
+      #modal-preview.modal-overlay {
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 8px !important;
+      }
+      #modal-preview .modal-glass.large {
+        max-width: 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 94vh !important;
+        border-radius: var(--radius-lg) !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+      }
+      #modal-preview .modal-glass.large .modal-header {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        padding: 12px 16px !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+      #modal-preview .modal-glass.large .modal-header > div {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        align-items: center !important;
+      }
+      #modal-preview .modal-glass.large .modal-header .btn-glass {
+        font-size: 0.78rem !important;
+        padding: 5px 10px !important;
+        white-space: nowrap !important;
+      }
+      #modal-preview .modal-glass.large .modal-body {
+        padding: 8px !important;
+        max-height: calc(94vh - 110px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      /* Reduce viewer height on mobile so it fits within the viewport */
+      #modal-preview .pdf-viewer-container {
+        min-height: 320px !important;
+        height: 100% !important;
+      }
+      #modal-preview .pdf-viewer-container iframe {
+        min-height: 320px !important;
+        height: 100% !important;
+      }
     }
 
     @keyframes slideUpBottomSheet {
