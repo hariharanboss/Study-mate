@@ -938,88 +938,227 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         border-radius: 999px !important;
       }
 
-      /* Row 3: Horizontal Scroll Category Pills + Pinned View Controls */
+      /* Row 3: Horizontal Filter Dropdown + Perfectly Fitted View Controls */
       .category-and-controls-bar {
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
-        gap: 8px !important;
+        gap: 6px !important;
         width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
         flex-wrap: nowrap !important;
         margin: 0 !important;
         padding: 0 !important;
       }
 
-      /* Hide loose horizontal pills on mobile, show clean dropdown */
+      /* Mobile Filter Dropdown Button: Stays strictly within left area */
       .category-and-controls-bar .filter-pills {
         display: none !important;
       }
       .mobile-filter-wrapper {
         display: flex !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        max-width: calc(100% - 148px) !important;
       }
-      .category-and-controls-bar .filter-pills::-webkit-scrollbar {
-        display: none !important;
-      }
-
-      .category-and-controls-bar .filter-pills .pill {
-        padding: 5px 11px !important;
-        font-size: 0.76rem !important;
+      .mobile-filter-btn {
+        width: 100% !important;
+        padding: 5px 8px !important;
+        font-size: 0.74rem !important;
         border-radius: 999px !important;
-        flex-shrink: 0 !important;
-      }
-
-      .category-and-controls-bar .drive-view-controls {
-        width: auto !important;
-        margin: 0 !important;
-        flex-shrink: 0 !important;
         display: flex !important;
         align-items: center !important;
-        gap: 6px !important;
+        justify-content: space-between !important;
+        gap: 4px !important;
+        box-sizing: border-box !important;
+        height: 32px !important;
       }
-      .category-and-controls-bar .drive-view-controls .btn-glass {
-        padding: 5px 10px !important;
-        font-size: 0.78rem !important;
+      .mobile-filter-btn span {
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        flex: 1 !important;
+        text-align: left !important;
+      }
+
+      /* Controls Toolbar: Pinned to right, 100% visible, no cutoff */
+      .category-and-controls-bar .drive-view-controls {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .drive-sort-select {
+        max-width: 76px !important;
+        padding: 4px 6px !important;
+        font-size: 0.72rem !important;
         border-radius: 999px !important;
+        height: 32px !important;
+        border: 1px solid var(--border-specular) !important;
+      }
+      #btn-toolbar-options {
+        padding: 4px 8px !important;
+        font-size: 0.74rem !important;
+        border-radius: 999px !important;
+        height: 32px !important;
+        gap: 3px !important;
+        white-space: nowrap !important;
+      }
+      .toolbar-more-dropdown {
+        right: 0 !important;
+        left: auto !important;
+        max-width: calc(100vw - 20px) !important;
+        min-width: 200px !important;
       }
 
-      /* Google Drive Material 3: 2-Column Responsive Card Grid */
+      /* Active Category Filter Status Banner: Mobile Responsive */
+      .active-filter-banner {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 8px 12px !important;
+        font-size: 0.78rem !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .active-filter-banner .btn-clear-pill-filter {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 6px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Material 3 2-Column Responsive Card Grid: Zero Spill, Minmax Protection */
       .items-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
 
-      /* Folder Cards: Compact, Centered & Touch-Friendly */
+      /* Folder & File Cards: Absolute Boundary Protection on Mobile */
+      .explorer-card {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+      }
+
+      /* Folder Cards */
       .folder-card {
-        padding: 14px 8px 12px 8px !important;
-        min-height: 98px !important;
+        padding: 12px 8px 10px 8px !important;
+        min-height: 94px !important;
         height: auto !important;
         border-radius: 14px !important;
       }
       .folder-card .card-icon-box {
-        width: 38px !important;
-        height: 38px !important;
-        border-radius: 11px !important;
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 10px !important;
         margin: 0 auto 6px auto !important;
       }
       .folder-card .card-title {
-        font-size: 0.8rem !important;
+        font-size: 0.78rem !important;
         line-height: 1.25 !important;
         max-width: 100% !important;
+        text-align: center !important;
       }
 
-      /* File Cards in Grid */
+      /* File Cards in Grid (PYQ Papers, Notes, Videos) */
       .explorer-card:not(.folder-card) {
-        padding: 12px 10px !important;
-        min-height: 112px !important;
+        padding: 10px 8px !important;
+        min-height: 105px !important;
         border-radius: 14px !important;
       }
+      .explorer-card:not(.folder-card) .card-top {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin-bottom: 6px !important;
+      }
       .explorer-card:not(.folder-card) .card-icon-box {
-        width: 38px !important;
-        height: 38px !important;
-        border-radius: 11px !important;
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 9px !important;
+        flex-shrink: 0 !important;
+      }
+      .explorer-card:not(.folder-card) .card-icon-box i,
+      .explorer-card:not(.folder-card) .card-icon-box svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+      .explorer-card:not(.folder-card) .card-info {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
       }
       .explorer-card:not(.folder-card) .card-title {
-        font-size: 0.8rem !important;
+        font-size: 0.76rem !important;
+        line-height: 1.22 !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        max-width: 100% !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        margin-bottom: 2px !important;
+      }
+      .explorer-card:not(.folder-card) .card-meta {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        flex-wrap: wrap !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        font-size: 0.68rem !important;
+        line-height: 1.2 !important;
+      }
+      .explorer-card:not(.folder-card) .context-tag {
+        max-width: 100% !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 0.64rem !important;
+        padding: 1px 5px !important;
+        box-sizing: border-box !important;
+      }
+      .explorer-card:not(.folder-card) .card-tags-container {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 3px !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin-top: 4px !important;
+      }
+      .explorer-card:not(.folder-card) .badge-tag {
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-size: 0.62rem !important;
+        padding: 1px 5px !important;
+      }
+      .explorer-card:not(.folder-card) .card-footer {
+        padding-top: 6px !important;
+        margin-top: auto !important;
+      }
+      .explorer-card:not(.folder-card) .card-actions .btn-action-icon {
+        width: 26px !important;
+        height: 26px !important;
       }
 
       /* List View on Mobile: Sleek 3-column Rows (Icon, Title/Meta, Action) */
