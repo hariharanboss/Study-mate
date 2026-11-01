@@ -21,7 +21,7 @@
 ## ⚡ Key Highlights
 
 - 🚀 **Zero-Latency Global Edge Runtime** — Operates on Cloudflare's planetary edge network within 50ms of 95% of the world's population.
-- 🗂️ **Windows 10/11 Explorer Ergonomics (Desktop)** — Native desktop file management: single-click to select and highlight an item, double-click to open folders/files, and native **Cut (`Ctrl + X`)**, **Copy (`Ctrl + C`)**, and **Paste (`Ctrl + V`)** across directories with recursive folder and file moving/cloning.
+- 🗂️ **Fast Desktop & Mobile File Navigation** — Single-click to instantly open folders and launch files, with native **Cut (`Ctrl + X`)**, **Copy (`Ctrl + C`)**, and **Paste (`Ctrl + V`)** across directories with recursive folder and file moving/cloning.
 - 📂 **Universal Folder Moving & Breadcrumbs Drop** — Drag any folder (with all its nested files) and drop directly onto any parent breadcrumb or Back button to move it up the directory hierarchy instantly, or right-click to *Move this folder to...*.
 - 📱 **Google Drive & M3 Mobile Experience** — Touch-optimized mobile layout with responsive two-column grid, slide-up bottom sheets, sticky filter pills, and single-tap instant access.
 - 🧭 **Liquid Breadcrumb Navigation** — Windows Explorer-style interactive breadcrumbs (`Home > Semester 1 > Subject`) with chevron dividers and quick parent navigation.

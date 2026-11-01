@@ -7922,34 +7922,10 @@
         const item = findNodeById(state.fsTree, itemId);
         if (!item) return;
 
-        // Select item on single click (Windows Explorer highlight)
+        // Select item on single click
         selectItem(itemId);
 
-        // Mobile / Touch devices: Single tap opens immediately
-        const isTouchOrMobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768;
-        if (isTouchOrMobile) {
-          if (item.type === 'folder') {
-            navigateToFolder(item.id);
-          } else {
-            openResourceItem(item);
-          }
-        }
-      });
-
-      // Desktop View: Double-click to open folder or launch file viewer (Windows 10/11 Explorer Standard)
-      els.explorerGrid.addEventListener('dblclick', (e) => {
-        // Prevent opening if double-clicking an action button
-        if (e.target.closest('button, .star-btn, .btn-card-more, .btn-item-rename, .btn-item-tag, .btn-item-delete')) {
-          return;
-        }
-
-        const card = e.target.closest('.explorer-card, .list-row');
-        if (!card) return;
-
-        const itemId = card.dataset.id;
-        const item = findNodeById(state.fsTree, itemId);
-        if (!item) return;
-
+        // Open folder or resource directly on single click
         if (item.type === 'folder') {
           navigateToFolder(item.id);
         } else {
