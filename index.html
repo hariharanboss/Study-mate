@@ -5153,6 +5153,10 @@
           <span>Video Solution</span>
         </h3>
         <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn-glass" id="youtube-share-btn" style="font-size:0.82rem; padding:6px 12px;" title="Share video with classmates">
+            <i data-lucide="share-2" class="lucide-icon"></i>
+            <span>Share</span>
+          </button>
           <a href="#" target="_blank" class="btn-glass" id="youtube-new-tab-btn" style="font-size:0.82rem; padding:6px 12px;">
             <i data-lucide="external-link" class="lucide-icon"></i>
             <span>Open in YouTube</span>
@@ -5180,6 +5184,11 @@
         </h3>
         <!-- Middle & Action Header Buttons -->
         <div style="display:flex; align-items:center; gap:8px;">
+          <!-- Share Button -->
+          <button type="button" class="btn-glass" id="preview-share-btn" style="font-size:0.82rem; padding:6px 14px;" title="Share material with classmates">
+            <i data-lucide="share-2" class="lucide-icon"></i>
+            <span>Share</span>
+          </button>
           <!-- Copy Code Button (Dynamically toggled for code/text files) -->
           <button type="button" class="btn-glass" id="preview-header-copy-btn" style="display:none; font-size:0.82rem; padding:6px 14px; color:#38bdf8; border-color:rgba(56, 189, 248, 0.35);" title="Copy full source code to clipboard">
             <i data-lucide="copy" class="lucide-icon"></i>
@@ -5768,6 +5777,10 @@
     <button class="context-menu-item" id="ctx-download">
       <i data-lucide="download"></i>
       <span>Download</span>
+    </button>
+    <button class="context-menu-item" id="ctx-share">
+      <i data-lucide="share-2"></i>
+      <span>Share Material</span>
     </button>
     <button class="context-menu-item" id="ctx-copy-link">
       <i data-lucide="copy"></i>
@@ -7670,10 +7683,20 @@
           if (modalId === 'modal-preview') {
             const embed = document.getElementById('preview-embed-container');
             if (embed) embed.innerHTML = '';
+            activeCurrentResourceItem = null;
+            if (window.location.hash.startsWith('#/file/')) {
+              const targetHash = (state.currentFolderId === 'root') ? '#/' : `#/folder/${state.currentFolderId}`;
+              window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
+            }
           }
           if (modalId === 'modal-youtube') {
             const yt = document.getElementById('youtube-iframe');
             if (yt) yt.src = '';
+            activeYouTubeItem = null;
+            if (window.location.hash.startsWith('#/file/')) {
+              const targetHash = (state.currentFolderId === 'root') ? '#/' : `#/folder/${state.currentFolderId}`;
+              window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
+            }
           }
         }
       }
@@ -7829,12 +7852,27 @@
         // 2. If context menu is open, close it
         hideContextMenus();
 
-        // 3. Folder navigation via history
+        // 3. File or folder navigation via history
+        const hash = window.location.hash || '';
+        if (hash.startsWith('#/file/')) {
+          const fileId = hash.replace('#/file/', '').split('?')[0].trim();
+          const targetItem = findNodeById(state.fsTree, fileId);
+          if (targetItem) {
+            const parent = findParentNode(state.fsTree, fileId);
+            if (parent && parent.id !== state.currentFolderId) {
+              state.currentFolderId = parent.id;
+              renderBreadcrumbs();
+              renderExplorerGrid();
+            }
+            openResourceItem(targetItem, false);
+            return;
+          }
+        }
+
         let targetId = null;
         if (e.state && e.state.folderId) {
           targetId = e.state.folderId;
         } else {
-          const hash = window.location.hash || '';
           if (hash.startsWith('#/folder/')) {
             targetId = hash.replace('#/folder/', '').split('?')[0].trim();
           } else if (hash === '#/' || hash === '#') {
@@ -7933,19 +7971,29 @@
         }
       });
 
-      // Global active code viewer text for copying
+      // Global active resource tracking & code viewer text for copying
       let currentActiveCodeText = '';
+      let activeCurrentResourceItem = null;
+      let activeCurrentResourceFileInfo = null;
+      let activeYouTubeItem = null;
 
-      function openResourceItem(item) {
+      function openResourceItem(item, pushHistory = true) {
         if (!item || !item.url) {
           showToast('No URL linked for this resource', 'error');
           return;
         }
 
         const fileInfo = getFileTypeInfo(item);
+        activeCurrentResourceItem = item;
+        activeCurrentResourceFileInfo = fileInfo;
+
+        if (pushHistory) {
+          window.history.pushState({ fileId: item.id, isModal: true }, '', `#/file/${item.id}`);
+        }
 
         // 1. YouTube Cinema Player
         if (fileInfo.category === 'youtube') {
+          activeYouTubeItem = item;
           const ytId = extractYouTubeId(item.url);
           document.getElementById('youtube-modal-title').innerHTML = `
             <i data-lucide="play-circle" class="lucide-icon" style="color:var(--accent-youtube);"></i>
@@ -8276,6 +8324,54 @@
         window.open(item.url, '_blank', 'noopener,noreferrer');
       }
 
+      // 1-Tap Native Share & Deep Link Engine
+      async function shareItemResource(item) {
+        if (!item) return;
+        const isFolder = item.type === 'folder';
+        const shareUrl = window.location.origin + (isFolder ? '/#/folder/' + item.id : '/#/file/' + item.id);
+        const shareTitle = `${item.name} | StudyMate`;
+        const shareText = isFolder 
+          ? `📚 Check out "${item.name}" folder on StudyMate:` 
+          : `📚 Check out "${item.name}" on StudyMate:`;
+
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: shareTitle,
+              text: shareText,
+              url: shareUrl
+            });
+            return;
+          } catch (err) {
+            if (err.name === 'AbortError') return; // User closed native share sheet
+          }
+        }
+
+        // Fallback: Copy to clipboard
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          showToast('📋 Link copied to clipboard! Share it with classmates.', 'success');
+        } catch (err) {
+          showToast('Share link: ' + shareUrl, 'info');
+        }
+      }
+
+      // Wire modal share buttons
+      const previewShareBtn = document.getElementById('preview-share-btn');
+      if (previewShareBtn) {
+        previewShareBtn.addEventListener('click', () => {
+          if (activeCurrentResourceItem) shareItemResource(activeCurrentResourceItem);
+        });
+      }
+
+      const youtubeShareBtn = document.getElementById('youtube-share-btn');
+      if (youtubeShareBtn) {
+        youtubeShareBtn.addEventListener('click', () => {
+          if (activeYouTubeItem) shareItemResource(activeYouTubeItem);
+          else if (activeCurrentResourceItem) shareItemResource(activeCurrentResourceItem);
+        });
+      }
+
       // Sticky Note "Read Full Guide" click
       els.stickyWrapper.addEventListener('click', (e) => {
         const delNoteBtn = e.target.closest('.btn-delete-note');
@@ -8421,6 +8517,9 @@
                 <i data-lucide="${isFolder ? 'folder-open' : 'eye'}" class="lucide-icon"></i>
                 <span>${isFolder ? 'Open Folder' : 'Quick Preview'}</span>
               </button>
+              <button class="btn-glass" id="drawer-btn-share" style="padding:0 12px;" title="Share with classmates">
+                <i data-lucide="share-2" style="width:15px; height:15px;"></i>
+              </button>
               <button class="btn-glass ${isStarred ? 'btn-primary' : ''}" id="drawer-btn-star" style="padding:0 12px;" title="${isStarred ? 'Unstar' : 'Star'}">
                 <i data-lucide="star" style="width:15px; height:15px; ${isStarred ? 'fill:#f59e0b; color:#f59e0b;' : ''}"></i>
               </button>
@@ -8472,6 +8571,10 @@
             if (isFolder) navigateToFolder(item.id);
             else openResourceItem(item);
           });
+          const drawerShareBtn = document.getElementById('drawer-btn-share');
+          if (drawerShareBtn) {
+            drawerShareBtn.addEventListener('click', () => shareItemResource(item));
+          }
           document.getElementById('drawer-btn-star').addEventListener('click', (e) => {
             toggleItemStar(item.id, e);
           });
@@ -8489,6 +8592,13 @@
               <span style="font-size:0.78rem; color:var(--text-subtle);">Current Directory</span>
             </div>
 
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+              <button class="btn-glass" id="drawer-btn-share-folder" style="flex:1; justify-content:center; font-size:0.82rem;" title="Share this folder link">
+                <i data-lucide="share-2" class="lucide-icon"></i>
+                <span>Share Folder</span>
+              </button>
+            </div>
+
             <div class="drawer-meta-list">
               <div class="drawer-meta-item">
                 <span class="drawer-meta-label">Subfolders</span>
@@ -8504,6 +8614,11 @@
               </div>
             </div>
           `;
+
+          const drawerShareFolderBtn = document.getElementById('drawer-btn-share-folder');
+          if (drawerShareFolderBtn && currentFolder) {
+            drawerShareFolderBtn.addEventListener('click', () => shareItemResource(currentFolder));
+          }
         }
         refreshIcons();
       }
@@ -11305,6 +11420,15 @@
         });
       }
 
+      const ctxShareBtn = document.getElementById('ctx-share');
+      if (ctxShareBtn) {
+        ctxShareBtn.addEventListener('click', () => {
+          const item = findNodeById(state.fsTree, state.contextMenuItemId);
+          hideContextMenus();
+          if (item) shareItemResource(item);
+        });
+      }
+
       const ctxCopyLinkBtn = document.getElementById('ctx-copy-link');
       if (ctxCopyLinkBtn) {
         ctxCopyLinkBtn.addEventListener('click', async () => {
@@ -11312,18 +11436,12 @@
           hideContextMenus();
           if (!item) return;
 
-          let linkToCopy = '';
-          if (item.type === 'folder') {
-            linkToCopy = window.location.origin + '/#/folder/' + item.id;
-          } else if (item.url) {
-            linkToCopy = item.url;
-          } else {
-            linkToCopy = window.location.origin + '/#/folder/' + state.currentFolderId;
-          }
+          const isFolder = item.type === 'folder';
+          const linkToCopy = window.location.origin + (isFolder ? '/#/folder/' + item.id : '/#/file/' + item.id);
 
           try {
             await navigator.clipboard.writeText(linkToCopy);
-            showToast('📋 Link copied to clipboard!', 'success');
+            showToast('📋 Link copied to clipboard! Share it with classmates.', 'success');
           } catch (err) {
             showToast('Link: ' + linkToCopy, 'info');
           }
@@ -12771,9 +12889,20 @@
           if (data.success && data.tree) {
             state.fsTree = data.tree;
 
-            // Restore initial folder from URL hash if present
+            // Restore initial folder or file from URL hash if present
             const initialHash = window.location.hash || '';
-            if (initialHash.startsWith('#/folder/')) {
+            let deepLinkFileId = null;
+
+            if (initialHash.startsWith('#/file/')) {
+              deepLinkFileId = initialHash.replace('#/file/', '').split('?')[0].trim();
+              const targetItem = findNodeById(state.fsTree, deepLinkFileId);
+              if (targetItem) {
+                const parentFolder = findParentNode(state.fsTree, deepLinkFileId);
+                if (parentFolder) {
+                  state.currentFolderId = parentFolder.id;
+                }
+              }
+            } else if (initialHash.startsWith('#/folder/')) {
               const targetId = initialHash.replace('#/folder/', '').split('?')[0].trim();
               if (findNodeById(state.fsTree, targetId)) {
                 state.currentFolderId = targetId;
@@ -12781,10 +12910,18 @@
             }
 
             // Register initial history state
-            window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', window.location.hash || '#/');
+            window.history.replaceState({ folderId: state.currentFolderId, isModal: Boolean(deepLinkFileId) }, '', window.location.hash || '#/');
 
             renderBreadcrumbs();
             renderExplorerGrid();
+
+            // Auto-open deep-linked file or video immediately
+            if (deepLinkFileId) {
+              const deepItem = findNodeById(state.fsTree, deepLinkFileId);
+              if (deepItem) {
+                setTimeout(() => openResourceItem(deepItem, false), 120);
+              }
+            }
           } else {
             showToast('Failed to load file tree', 'error');
           }
@@ -13036,6 +13173,10 @@
           theaterEl.style.cursor = 'default';
         }
         if (theaterLaserDot) theaterLaserDot.style.display = 'none';
+        if (window.location.hash.startsWith('#/file/')) {
+          const targetHash = (state.currentFolderId === 'root') ? '#/' : `#/folder/${state.currentFolderId}`;
+          window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
+        }
       }
 
       function nextPresentationSlide() {
@@ -13109,6 +13250,13 @@
       });
 
       // Theater controls click events
+      const theaterShareBtn = document.getElementById('theater-share-btn');
+      if (theaterShareBtn) {
+        theaterShareBtn.onclick = () => {
+          const itemToShare = presentationState.item || activeCurrentResourceItem;
+          if (itemToShare) shareItemResource(itemToShare);
+        };
+      }
       if (theaterExitBtn) theaterExitBtn.onclick = exitPresentationMode;
       if (theaterBtnNext) theaterBtnNext.onclick = () => { nextPresentationSlide(); resetTheaterHudTimer(); };
       if (theaterBtnPrev) theaterBtnPrev.onclick = () => { prevPresentationSlide(); resetTheaterHudTimer(); };
@@ -13258,6 +13406,10 @@
       </div>
       <div class="theater-top-actions">
         <span class="theater-badge">Theater Mode</span>
+        <button type="button" class="theater-exit-btn" id="theater-share-btn" title="Share Presentation" style="margin-right:6px;">
+          <i data-lucide="share-2" style="width:16px; height:16px;"></i>
+          <span>Share</span>
+        </button>
         <button type="button" class="theater-exit-btn" id="theater-exit-btn" title="Exit Presentation (Esc)">
           <i data-lucide="x" style="width:16px; height:16px;"></i>
           <span>Exit</span>
