@@ -8920,8 +8920,6 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         } catch (_error) {
           console.warn('PDF.js rendering fallback to iframe:', _error);
         }
-          console.warn('PDF.js rendering fallback to iframe:', _error);
-        }
 
         let blobUrl = '';
         try {
