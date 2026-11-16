@@ -1392,7 +1392,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       #modal-preview .modal-glass.large {
         max-width: 100% !important;
         width: 100% !important;
-        height: auto !important;
+        height: 94vh !important;
         max-height: 94vh !important;
         border-radius: var(--radius-lg) !important;
         overflow: hidden !important;
@@ -1403,9 +1403,10 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       #modal-preview .modal-glass.large .modal-header {
         flex-wrap: wrap !important;
         gap: 8px !important;
-        padding: 12px 16px !important;
+        padding: 10px 14px !important;
         align-items: center !important;
         justify-content: space-between !important;
+        flex-shrink: 0 !important;
       }
       #modal-preview .modal-glass.large .modal-header > div {
         display: flex !important;
@@ -1419,19 +1420,30 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         white-space: nowrap !important;
       }
       #modal-preview .modal-glass.large .modal-body {
-        padding: 8px !important;
-        max-height: calc(94vh - 110px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-      /* Reduce viewer height on mobile so it fits within the viewport */
-      #modal-preview .pdf-viewer-container {
-        min-height: 320px !important;
+        padding: 0 !important;
+        flex: 1 !important;
+        min-height: 0 !important;
         height: 100% !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      #modal-preview .pdf-viewer-container {
+        width: 100% !important;
+        height: 100% !important;
+        flex: 1 !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       #modal-preview .pdf-viewer-container iframe {
-        min-height: 320px !important;
+        width: 100% !important;
         height: 100% !important;
+        flex: 1 !important;
+        min-height: 0 !important;
+        border: none !important;
+        display: block !important;
       }
     }
 
@@ -3259,11 +3271,25 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     }
 
     /* Multi-File Format Viewfinder Container */
+    #modal-preview .modal-glass.large {
+      max-width: 1040px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #modal-preview .modal-body {
+      padding: 0 !important;
+      overflow: hidden !important;
+      flex: 1 !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
     .pdf-viewer-container {
       width: 100%;
       height: 100%;
-      min-height: 640px;
-      border-radius: var(--radius-md);
+      flex: 1;
+      min-height: 0;
       overflow: hidden;
       background: #0f172a;
       display: flex;
@@ -3273,9 +3299,31 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     .pdf-viewer-container iframe {
       width: 100%;
       height: 100%;
-      min-height: 640px;
+      min-height: 0;
       border: none;
       flex: 1;
+      display: block;
+    }
+    .pdf-engine-tab {
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-specular);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: var(--transition-smooth);
+    }
+    .pdf-engine-tab:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--text-main);
+    }
+    .pdf-engine-tab.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #fff;
     }
 
 
@@ -5524,7 +5572,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           </button>
         </div>
       </div>
-      <div class="modal-body" style="padding:10px; height:100%;">
+      <div class="modal-body" style="padding:0; height:100%; overflow:hidden;">
         <div class="pdf-viewer-container" id="preview-embed-container">
           <!-- Dynamic Iframe / Embed for PDF or Image -->
         </div>
@@ -8603,11 +8651,45 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
         // 6. PDF Documents & Default Embeds
         if (fileInfo.category === 'pdf' || item.url.toLowerCase().endsWith('.pdf')) {
+          const fullPublicUrl = item.url.startsWith('http') ? item.url : (window.location.origin + item.url);
+          const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          const gdocsUrl = \`https://docs.google.com/viewer?url=\${encodeURIComponent(fullPublicUrl)}&embedded=true\`;
+          const nativeUrl = \`\${item.url}#toolbar=1\`;
+          const defaultSrc = isMobile ? gdocsUrl : nativeUrl;
+
           container.innerHTML = \`
-            <iframe src="\${item.url}#toolbar=1" title="\${item.name}" style="width:100%; height:100%; min-height:640px; border:none;"></iframe>
+            <div class="pdf-viewer-stage" style="width:100%; height:100%; display:flex; flex-direction:column; overflow:hidden; flex:1;">
+              <div class="pdf-engine-selector" style="display:flex; align-items:center; justify-content:space-between; padding:6px 12px; background:rgba(15, 23, 42, 0.9); border-bottom:1px solid var(--border-specular); font-size:0.75rem; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <button type="button" id="pdf-engine-gdocs" class="pdf-engine-tab \${isMobile ? 'active' : ''}">Google Drive Viewer</button>
+                  <button type="button" id="pdf-engine-native" class="pdf-engine-tab \${!isMobile ? 'active' : ''}">Native Browser</button>
+                </div>
+                <div style="color:var(--text-subtle); font-size:0.70rem;">
+                  <span>\${isMobile ? 'Google Drive 60fps mobile engine' : 'Native desktop engine'}</span>
+                </div>
+              </div>
+              <iframe id="pdf-active-frame" src="\${defaultSrc}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allowfullscreen></iframe>
+            </div>
           \`;
           openModal('modal-preview');
           refreshIcons();
+
+          const gdocsBtn = document.getElementById('pdf-engine-gdocs');
+          const nativeBtn = document.getElementById('pdf-engine-native');
+          const frame = document.getElementById('pdf-active-frame');
+
+          if (gdocsBtn && nativeBtn && frame) {
+            gdocsBtn.onclick = () => {
+              gdocsBtn.classList.add('active');
+              nativeBtn.classList.remove('active');
+              frame.src = gdocsUrl;
+            };
+            nativeBtn.onclick = () => {
+              nativeBtn.classList.add('active');
+              gdocsBtn.classList.remove('active');
+              frame.src = nativeUrl;
+            };
+          }
           return;
         }
 
