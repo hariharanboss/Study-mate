@@ -20,6 +20,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+  <!-- PDF.js Engine for Smooth Virtual Page Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
     /* ==========================================================================
        1. CSS CUSTOM PROPERTIES & LIQUID GLASS DESIGN SYSTEM (DM SANS)
@@ -3206,6 +3209,156 @@
       min-height: 640px;
       border: none;
       flex: 1;
+    }
+
+    /* High-Performance Paginated PDF Reader (Smooth 25-Page Batches) */
+    .pdf-reader-root {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      min-height: 640px;
+      background: #090d16;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+    }
+    .pdf-reader-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 9px 16px;
+      background: rgba(15, 23, 42, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 10;
+    }
+    .pdf-tb-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pdf-tb-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(239, 68, 68, 0.16);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      letter-spacing: 0.04em;
+    }
+    .pdf-tb-stat {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .pdf-tb-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pdf-jump-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-subtle);
+    }
+    .pdf-jump-input {
+      width: 48px;
+      padding: 4px 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+    .btn-pdf-tool {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-pdf-tool:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .pdf-divider {
+      width: 1px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.12);
+      margin: 0 4px;
+    }
+    .pdf-zoom-level {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      min-width: 42px;
+      text-align: center;
+    }
+    .pdf-scroll-stage {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: auto;
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      -webkit-overflow-scrolling: touch;
+      background: #060910;
+    }
+    .pdf-page-wrapper {
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pdf-page-num-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .pdf-page-wrapper canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    .pdf-load-more-card {
+      width: 100%;
+      max-width: 520px;
+      padding: 22px 20px;
+      background: rgba(18, 22, 33, 0.85);
+      border: 1px dashed rgba(59, 130, 246, 0.35);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      margin: 14px auto 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
     /* IDE Code Viewer */
@@ -7684,6 +7837,7 @@
             const embed = document.getElementById('preview-embed-container');
             if (embed) embed.innerHTML = '';
             activeCurrentResourceItem = null;
+            if (typeof cleanupActivePdf === 'function') cleanupActivePdf();
             if (window.location.hash.startsWith('#/file/')) {
               const targetHash = (state.currentFolderId === 'root') ? '#/' : `#/folder/${state.currentFolderId}`;
               window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
@@ -8310,18 +8464,294 @@
           return;
         }
 
-        // 6. PDF Documents & Default Embeds
+        // 6. PDF Documents & Default Embeds (Optimized Paginated View)
         if (fileInfo.category === 'pdf' || item.url.toLowerCase().endsWith('.pdf')) {
-          container.innerHTML = `
-            <iframe src="${item.url}#toolbar=1" title="${item.name}" style="width:100%; height:100%; min-height:640px; border:none;"></iframe>
-          `;
           openModal('modal-preview');
+          renderPdfViewer(item, container);
           refreshIcons();
           return;
         }
 
         // 7. General Web Resources & Links
         window.open(item.url, '_blank', 'noopener,noreferrer');
+      }
+
+      // ==========================================================================
+      // HIGH-SPEED PAGINATED PDF VIEWER (25-PAGE BATCHES FOR 60FPS SCROLLING)
+      // ==========================================================================
+      const PDF_PAGE_BATCH = 25; // 20-30 pages batch limit as requested
+      let currentPdfDoc = null;
+      let currentPdfTotalPages = 0;
+      let currentPdfRenderedPages = 0;
+      let currentPdfZoom = 1.0;
+      let currentPdfItem = null;
+      let isRenderingPdf = false;
+      let activePdfLoadingTask = null;
+
+      function cleanupActivePdf() {
+        if (activePdfLoadingTask && activePdfLoadingTask.destroy) {
+          try { activePdfLoadingTask.destroy(); } catch (e) {}
+        }
+        currentPdfDoc = null;
+        currentPdfTotalPages = 0;
+        currentPdfRenderedPages = 0;
+        currentPdfZoom = 1.0;
+        currentPdfItem = null;
+        isRenderingPdf = false;
+        activePdfLoadingTask = null;
+      }
+
+      function loadPdfJsLibrary() {
+        if (window.pdfjsLib) {
+          if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          }
+          return Promise.resolve(window.pdfjsLib);
+        }
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+          script.onload = () => {
+            if (window.pdfjsLib) {
+              window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+              resolve(window.pdfjsLib);
+            } else {
+              reject(new Error('PDF.js failed to initialize'));
+            }
+          };
+          script.onerror = () => reject(new Error('Failed to load PDF.js script from CDN'));
+          document.head.appendChild(script);
+        });
+      }
+
+      async function renderPdfViewer(item, container) {
+        cleanupActivePdf();
+        currentPdfItem = item;
+        currentPdfZoom = 1.0;
+
+        container.innerHTML = `
+          <div class="pdf-reader-root" id="pdf-reader-root">
+            <div class="pdf-reader-toolbar">
+              <div class="pdf-tb-left">
+                <span class="pdf-tb-badge">PDF</span>
+                <span class="pdf-tb-stat" id="pdf-page-stat">Initializing smooth viewer...</span>
+              </div>
+              <div class="pdf-tb-right">
+                <div class="pdf-jump-box">
+                  <span>Go to:</span>
+                  <input type="number" id="pdf-jump-input" min="1" max="1" value="1" class="pdf-jump-input" />
+                  <button type="button" class="btn-pdf-tool" id="btn-pdf-jump">Go</button>
+                </div>
+                <div class="pdf-divider"></div>
+                <button type="button" class="btn-pdf-tool" id="btn-pdf-zoom-out" title="Zoom Out (-)">-</button>
+                <span class="pdf-zoom-level" id="pdf-zoom-text">100%</span>
+                <button type="button" class="btn-pdf-tool" id="btn-pdf-zoom-in" title="Zoom In (+)">+</button>
+                <button type="button" class="btn-pdf-tool" id="btn-pdf-fit-width" title="Fit to width">Fit</button>
+              </div>
+            </div>
+            <div class="pdf-scroll-stage" id="pdf-scroll-stage">
+              <div class="pdf-loading-indicator" id="pdf-loading-indicator" style="padding:40px 20px; text-align:center;">
+                <div class="loading-spinner" style="width:36px; height:36px; margin:0 auto 14px; border-width:3px;"></div>
+                <div style="font-size:0.95rem; font-weight:600; color:var(--text-main);">Optimizing PDF for smooth reading...</div>
+                <div style="font-size:0.78rem; color:var(--text-subtle); margin-top:4px;">Loading first 25 pages for lag-free scrolling</div>
+              </div>
+              <div class="pdf-pages-container" id="pdf-pages-container" style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;"></div>
+              <div class="pdf-load-more-box" id="pdf-load-more-box" style="display:none; width:100%;"></div>
+            </div>
+          </div>
+        `;
+        refreshIcons();
+
+        try {
+          const pdfjs = await loadPdfJsLibrary();
+          activePdfLoadingTask = pdfjs.getDocument({
+            url: item.url,
+            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+            cMapPacked: true
+          });
+          currentPdfDoc = await activePdfLoadingTask.promise;
+          currentPdfTotalPages = currentPdfDoc.numPages;
+
+          const jumpInput = document.getElementById('pdf-jump-input');
+          if (jumpInput) jumpInput.max = currentPdfTotalPages;
+
+          const loadingIndicator = document.getElementById('pdf-loading-indicator');
+          if (loadingIndicator) loadingIndicator.style.display = 'none';
+
+          // Render first batch (up to 25 pages)
+          await renderPdfBatch(1, Math.min(PDF_PAGE_BATCH, currentPdfTotalPages));
+          attachPdfToolbarEvents();
+        } catch (err) {
+          console.warn('PDF.js rendering fallback to native embed:', err);
+          container.innerHTML = `
+            <iframe src="${item.url}#toolbar=1" title="${item.name}" style="width:100%; height:100%; min-height:640px; border:none;"></iframe>
+          `;
+        }
+      }
+
+      async function renderPdfBatch(fromPage, toPage) {
+        if (!currentPdfDoc || isRenderingPdf) return;
+        isRenderingPdf = true;
+
+        const pagesContainer = document.getElementById('pdf-pages-container');
+        const loadMoreBox = document.getElementById('pdf-load-more-box');
+        const pageStat = document.getElementById('pdf-page-stat');
+        if (!pagesContainer) {
+          isRenderingPdf = false;
+          return;
+        }
+
+        const stage = document.getElementById('pdf-scroll-stage');
+        const stageWidth = stage ? (stage.clientWidth - 40) : 760;
+
+        for (let p = fromPage; p <= toPage; p++) {
+          if (!currentPdfDoc) break;
+          if (document.getElementById(`pdf-page-wrapper-${p}`)) continue;
+
+          try {
+            const page = await currentPdfDoc.getPage(p);
+            const unscaledViewport = page.getViewport({ scale: 1.0 });
+            let desiredWidth = Math.min(unscaledViewport.width, Math.max(300, stageWidth));
+            if (stageWidth < 600) desiredWidth = stageWidth; // Mobile screen width adaptation
+            const baseScale = (desiredWidth / unscaledViewport.width) * currentPdfZoom;
+
+            const viewport = page.getViewport({ scale: baseScale });
+            const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+
+            const pageWrapper = document.createElement('div');
+            pageWrapper.className = 'pdf-page-wrapper';
+            pageWrapper.id = `pdf-page-wrapper-${p}`;
+
+            const badge = document.createElement('div');
+            badge.className = 'pdf-page-num-badge';
+            badge.textContent = `Page ${p} of ${currentPdfTotalPages}`;
+            pageWrapper.appendChild(badge);
+
+            const canvas = document.createElement('canvas');
+            canvas.id = `pdf-canvas-${p}`;
+            canvas.width = Math.floor(viewport.width * outputScale);
+            canvas.height = Math.floor(viewport.height * outputScale);
+            canvas.style.width = Math.floor(viewport.width) + 'px';
+            canvas.style.height = Math.floor(viewport.height) + 'px';
+            pageWrapper.appendChild(canvas);
+
+            pagesContainer.appendChild(pageWrapper);
+
+            const ctx = canvas.getContext('2d');
+            const renderContext = {
+              canvasContext: ctx,
+              viewport: viewport,
+              transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
+            };
+            await page.render(renderContext).promise;
+            currentPdfRenderedPages = p;
+
+            if (pageStat) {
+              pageStat.textContent = `Showing 1–${p} of ${currentPdfTotalPages} pages`;
+            }
+          } catch (e) {
+            console.error(`Error rendering page ${p}:`, e);
+          }
+        }
+
+        // Update Load More footer card
+        if (loadMoreBox) {
+          if (currentPdfRenderedPages < currentPdfTotalPages) {
+            const nextBatchEnd = Math.min(currentPdfRenderedPages + PDF_PAGE_BATCH, currentPdfTotalPages);
+            loadMoreBox.style.display = 'block';
+            loadMoreBox.innerHTML = `
+              <div class="pdf-load-more-card">
+                <div style="font-size:0.92rem; font-weight:700; color:var(--text-main);">
+                  Showing pages 1–${currentPdfRenderedPages} of ${currentPdfTotalPages}
+                </div>
+                <p style="font-size:0.78rem; color:var(--text-subtle); margin:6px 0 16px;">
+                  Pages limited to 25 at a time for lag-free, smooth scrolling.
+                </p>
+                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                  <button type="button" class="btn-glass btn-primary" id="btn-pdf-load-more" style="font-size:0.82rem; padding:8px 18px;">
+                    <i data-lucide="chevrons-down" style="width:14px; height:14px; margin-right:4px;"></i>
+                    <span>Load Next 25 Pages (${currentPdfRenderedPages + 1}–${nextBatchEnd})</span>
+                  </button>
+                  <button type="button" class="btn-glass" id="btn-pdf-load-all" style="font-size:0.82rem; padding:8px 16px;">
+                    <span>Load All (${currentPdfTotalPages} Pages)</span>
+                  </button>
+                </div>
+              </div>
+            `;
+            refreshIcons();
+
+            const moreBtn = document.getElementById('btn-pdf-load-more');
+            if (moreBtn) {
+              moreBtn.onclick = () => renderPdfBatch(currentPdfRenderedPages + 1, nextBatchEnd);
+            }
+            const allBtn = document.getElementById('btn-pdf-load-all');
+            if (allBtn) {
+              allBtn.onclick = () => renderPdfBatch(currentPdfRenderedPages + 1, currentPdfTotalPages);
+            }
+          } else {
+            loadMoreBox.style.display = 'none';
+            if (pageStat) {
+              pageStat.textContent = `All ${currentPdfTotalPages} pages loaded`;
+            }
+          }
+        }
+
+        isRenderingPdf = false;
+      }
+
+      function attachPdfToolbarEvents() {
+        const jumpInput = document.getElementById('pdf-jump-input');
+        const jumpBtn = document.getElementById('btn-pdf-jump');
+        const zoomInBtn = document.getElementById('btn-pdf-zoom-in');
+        const zoomOutBtn = document.getElementById('btn-pdf-zoom-out');
+        const fitBtn = document.getElementById('btn-pdf-fit-width');
+
+        if (jumpBtn && jumpInput) {
+          jumpBtn.onclick = () => {
+            const val = parseInt(jumpInput.value, 10);
+            if (!isNaN(val)) jumpToPdfPage(val);
+          };
+          jumpInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              const val = parseInt(jumpInput.value, 10);
+              if (!isNaN(val)) jumpToPdfPage(val);
+            }
+          };
+        }
+
+        if (zoomInBtn) {
+          zoomInBtn.onclick = () => reRenderWithZoom(currentPdfZoom + 0.15);
+        }
+        if (zoomOutBtn) {
+          zoomOutBtn.onclick = () => reRenderWithZoom(currentPdfZoom - 0.15);
+        }
+        if (fitBtn) {
+          fitBtn.onclick = () => reRenderWithZoom(1.0);
+        }
+      }
+
+      async function jumpToPdfPage(targetPage) {
+        if (!currentPdfDoc || targetPage < 1 || targetPage > currentPdfTotalPages) return;
+        if (targetPage > currentPdfRenderedPages) {
+          const toPage = Math.min(targetPage + 5, currentPdfTotalPages);
+          await renderPdfBatch(currentPdfRenderedPages + 1, toPage);
+        }
+        const targetEl = document.getElementById(`pdf-page-wrapper-${targetPage}`);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      function reRenderWithZoom(newZoom) {
+        currentPdfZoom = Math.max(0.6, Math.min(2.0, parseFloat(newZoom.toFixed(2))));
+        const zoomText = document.getElementById('pdf-zoom-text');
+        if (zoomText) zoomText.textContent = `${Math.round(currentPdfZoom * 100)}%`;
+
+        const pagesContainer = document.getElementById('pdf-pages-container');
+        if (pagesContainer) pagesContainer.innerHTML = '';
+        const limit = Math.max(currentPdfRenderedPages, PDF_PAGE_BATCH);
+        currentPdfRenderedPages = 0;
+        renderPdfBatch(1, Math.min(limit, currentPdfTotalPages));
       }
 
       // 1-Tap Native Share & Deep Link Engine
