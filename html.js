@@ -1199,7 +1199,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       }
 
       /* Breadcrumbs Bar: Single-Row Horizontal Scroll (No Multi-Line Wrapping) */
-      .breadcrumbs-bar {
+      .breadcrumbs-bar:not([style*="display: none"]):not([style*="display:none"]) {
         display: flex !important;
         align-items: center !important;
         flex-wrap: nowrap !important;
@@ -1211,6 +1211,15 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         gap: 4px !important;
         border-radius: 12px !important;
         margin-bottom: 12px !important;
+      }
+      .breadcrumbs-bar[style*="display: none"],
+      .breadcrumbs-bar[style*="display:none"] {
+        display: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        height: 0 !important;
+        min-height: 0 !important;
       }
       .breadcrumbs-bar::-webkit-scrollbar {
         display: none !important;
@@ -2757,10 +2766,10 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       backdrop-filter: blur(var(--blur-strength));
       -webkit-backdrop-filter: blur(var(--blur-strength));
       border: 1px solid var(--border-specular);
-      border-left: 4px solid var(--accent-primary);
+      border-left: 3px solid var(--accent-primary);
       border-radius: var(--radius-md);
-      padding: 16px 20px;
-      margin-bottom: 22px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
       box-shadow: var(--shadow-glass);
       transition: var(--transition-smooth);
     }
@@ -4331,6 +4340,28 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       align-items: center;
       justify-content: center;
       transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .star-btn svg,
+    .star-btn i {
+      pointer-events: none;
+    }
+    .folder-card .star-btn {
+      width: 34px !important;
+      height: 34px !important;
+      min-width: 34px !important;
+      min-height: 34px !important;
+      border-radius: 999px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: var(--text-muted) !important;
+      z-index: 10 !important;
+    }
+    .folder-card .star-btn:hover,
+    .folder-card .star-btn.starred {
+      background: rgba(245, 158, 11, 0.20) !important;
+      border-color: rgba(245, 158, 11, 0.40) !important;
+      color: #f59e0b !important;
     }
     .star-btn:hover {
       color: #f59e0b;
@@ -4556,56 +4587,60 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     .callout-card {
       position: relative;
       width: 100%;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--callout-border, rgba(59, 130, 246, 0.25));
-      border-left: 5px solid var(--callout-color, var(--accent-primary));
-      background: linear-gradient(90deg, var(--callout-bg-glow, rgba(59, 130, 246, 0.10)) 0%, var(--bg-surface) 100%);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--callout-border, rgba(59, 130, 246, 0.20));
+      border-left: 3px solid var(--callout-color, var(--accent-primary));
+      background: linear-gradient(90deg, var(--callout-bg-glow, rgba(59, 130, 246, 0.06)) 0%, var(--bg-surface) 100%);
       backdrop-filter: blur(var(--blur-strength));
       -webkit-backdrop-filter: blur(var(--blur-strength));
-      box-shadow: 0 8px 26px var(--callout-shadow, rgba(59, 130, 246, 0.08));
+      box-shadow: 0 2px 10px var(--callout-shadow, rgba(59, 130, 246, 0.05));
       overflow: hidden;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .callout-card:hover {
-      box-shadow: 0 12px 36px var(--callout-shadow-hover, rgba(59, 130, 246, 0.15));
-      border-color: var(--callout-border-hover, rgba(59, 130, 246, 0.45));
+      box-shadow: 0 4px 16px var(--callout-shadow-hover, rgba(59, 130, 246, 0.10));
+      border-color: var(--callout-border-hover, rgba(59, 130, 246, 0.35));
     }
 
     .callout-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 18px;
-      gap: 12px;
+      padding: 8px 12px;
+      gap: 8px;
     }
 
     .callout-header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .callout-icon-box {
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--callout-icon-bg, rgba(59, 130, 246, 0.18));
       color: var(--callout-color, var(--accent-primary));
       flex-shrink: 0;
-      box-shadow: 0 0 14px var(--callout-icon-glow, rgba(59, 130, 246, 0.22));
+      box-shadow: 0 0 8px var(--callout-icon-glow, rgba(59, 130, 246, 0.15));
+    }
+    .callout-icon-box svg {
+      width: 14px !important;
+      height: 14px !important;
     }
 
     .callout-badge {
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 3px 9px;
+      letter-spacing: 0.05em;
+      padding: 2px 6px;
       border-radius: var(--radius-sm);
       background: var(--callout-badge-bg, rgba(59, 130, 246, 0.16));
       color: var(--callout-color, var(--accent-primary));
@@ -4614,8 +4649,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
     .callout-title {
       font-family: var(--font-heading);
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 0.88rem;
+      font-weight: 600;
       color: var(--text-main);
       letter-spacing: -0.01em;
     }
@@ -4653,9 +4688,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     }
 
     .callout-body {
-      padding: 0 20px 18px 66px;
-      font-size: 0.92rem;
-      line-height: 1.68;
+      padding: 2px 14px 10px 44px;
+      font-size: 0.82rem;
+      line-height: 1.48;
       color: var(--text-muted);
       transition: all 0.25s ease;
     }
@@ -4709,13 +4744,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
-      border-radius: var(--radius-md);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.02);
       color: var(--text-subtle);
-      font-size: 0.84rem;
-      margin: 12px 0 16px 0;
+      font-size: 0.78rem;
+      margin: 6px 0 10px 0;
     }
 
     
@@ -5024,10 +5059,15 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         font-size: 0.88rem !important;
         border-radius: 12px !important;
         min-height: 48px !important;
-        display: flex !important;
         align-items: center !important;
         gap: 12px !important;
         margin: 2px 0 !important;
+      }
+      .drive-context-menu .context-menu-item[style*="display: none"],
+      .drive-context-menu .context-menu-item[style*="display:none"],
+      .drive-context-menu .context-menu-divider[style*="display: none"],
+      .drive-context-menu .context-menu-divider[style*="display:none"] {
+        display: none !important;
       }
       .drive-context-menu .context-menu-item i,
       .drive-context-menu .context-menu-item svg {
@@ -7856,7 +7896,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           }
 
           // Full-Size Callout Section ALWAYS placed below the files!
-          outputHtml += \`<div style="grid-column:1 / -1; width:100%; margin-top:20px;">\${calloutsHtml}</div>\`;
+          if (calloutsHtml && calloutsHtml.trim() !== '') {
+            outputHtml += \`<div style="grid-column:1 / -1; width:100%; margin-top:16px;">\${calloutsHtml}</div>\`;
+          }
 
           els.explorerGrid.innerHTML = outputHtml;
         } else {
@@ -7886,7 +7928,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           }
 
           // Full-Size Callout Section ALWAYS placed below the files!
-          outputHtml += \`<div style="grid-column:1 / -1; width:100%; margin-top:20px;">\${calloutsHtml}</div>\`;
+          if (calloutsHtml && calloutsHtml.trim() !== '') {
+            outputHtml += \`<div style="grid-column:1 / -1; width:100%; margin-top:16px;">\${calloutsHtml}</div>\`;
+          }
 
           els.explorerGrid.innerHTML = outputHtml;
         } // End Grid View conditional
@@ -8280,11 +8324,23 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
       els.btnHome.addEventListener('click', () => navigateToFolder('root'));
 
+      els.explorerGrid.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('.star-btn, .btn-card-more')) {
+          e.stopPropagation();
+        }
+      });
+
       els.explorerGrid.addEventListener('click', (e) => {
         const starBtn = e.target.closest('.star-btn');
         if (starBtn && starBtn.dataset.starId) {
+          e.preventDefault();
           e.stopPropagation();
-          toggleItemStar(starBtn.dataset.starId, e);
+          const targetId = starBtn.dataset.starId;
+          const targetItem = findNodeById(state.fsTree, targetId);
+          const wasStarred = state.starredIds.has(targetId);
+          toggleItemStar(targetId, e);
+          const itemName = targetItem ? targetItem.name : 'item';
+          showToast(wasStarred ? \`Removed "\${itemName}" from Starred\` : \`Added "\${itemName}" to Starred\`, 'success');
           return;
         }
 
@@ -12136,7 +12192,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         ctxStarBtn.addEventListener('click', (e) => {
           const item = findNodeById(state.fsTree, state.contextMenuItemId);
           hideContextMenus();
-          if (item) toggleItemStar(item.id, e);
+          if (item) {
+            const wasStarred = state.starredIds.has(item.id);
+            toggleItemStar(item.id, e);
+            showToast(wasStarred ? \`Removed "\${item.name}" from Starred\` : \`Added "\${item.name}" to Starred\`, 'success');
+          }
         });
       }
 
