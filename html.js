@@ -3352,14 +3352,56 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     }
     .pdf-load-more-card {
       width: 100%;
-      max-width: 520px;
-      padding: 22px 20px;
+      max-width: 480px;
+      padding: 26px 24px;
       background: rgba(18, 22, 33, 0.85);
-      border: 1px dashed rgba(59, 130, 246, 0.35);
-      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-xl);
       text-align: center;
-      margin: 14px auto 30px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      margin: 18px auto 36px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .pdf-card-icon-bubble {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.28);
+      color: #60a5fa;
+      margin-bottom: 12px;
+    }
+    .pdf-card-heading {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+    .pdf-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 6px auto 18px;
+      max-width: 360px;
+      line-height: 1.5;
+    }
+    .pdf-open-full-btn {
+      font-size: 0.84rem !important;
+      padding: 10px 22px !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-weight: 600 !important;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3) !important;
+      transition: all 0.2s ease !important;
+    }
+    .pdf-open-full-btn:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45) !important;
     }
 
     /* IDE Code Viewer */
@@ -8658,37 +8700,28 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         // Update Load More footer card
         if (loadMoreBox) {
           if (currentPdfRenderedPages < currentPdfTotalPages) {
-            const nextBatchEnd = Math.min(currentPdfRenderedPages + PDF_PAGE_BATCH, currentPdfTotalPages);
+            const pdfFileUrl = currentPdfItem ? currentPdfItem.url : '#';
             loadMoreBox.style.display = 'block';
             loadMoreBox.innerHTML = \`
               <div class="pdf-load-more-card">
-                <div style="font-size:0.92rem; font-weight:700; color:var(--text-main);">
-                  Showing pages 1–\${currentPdfRenderedPages} of \${currentPdfTotalPages}
+                <div class="pdf-card-icon-bubble">
+                  <i data-lucide="file-text" style="width:20px; height:20px;"></i>
                 </div>
-                <p style="font-size:0.78rem; color:var(--text-subtle); margin:6px 0 16px;">
-                  Pages limited to 25 at a time for lag-free, smooth scrolling.
+                <div class="pdf-card-heading">
+                  Previewing 1–\${currentPdfRenderedPages} of \${currentPdfTotalPages} Pages
+                </div>
+                <p class="pdf-card-desc">
+                  First \${currentPdfRenderedPages} pages rendered for fast, lag-free scrolling. To view all \${currentPdfTotalPages} pages, open the complete file in a new tab.
                 </p>
-                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-                  <button type="button" class="btn-glass btn-primary" id="btn-pdf-load-more" style="font-size:0.82rem; padding:8px 18px;">
-                    <i data-lucide="chevrons-down" style="width:14px; height:14px; margin-right:4px;"></i>
-                    <span>Load Next 25 Pages (\${currentPdfRenderedPages + 1}–\${nextBatchEnd})</span>
-                  </button>
-                  <button type="button" class="btn-glass" id="btn-pdf-load-all" style="font-size:0.82rem; padding:8px 16px;">
-                    <span>Load All (\${currentPdfTotalPages} Pages)</span>
-                  </button>
+                <div style="display:flex; justify-content:center;">
+                  <a href="\${pdfFileUrl}" target="_blank" rel="noopener noreferrer" class="btn-glass btn-primary pdf-open-full-btn" title="Open complete document in new tab">
+                    <i data-lucide="external-link" style="width:15px; height:15px;"></i>
+                    <span>Open in New Tab to View File Fully</span>
+                  </a>
                 </div>
               </div>
             \`;
             refreshIcons();
-
-            const moreBtn = document.getElementById('btn-pdf-load-more');
-            if (moreBtn) {
-              moreBtn.onclick = () => renderPdfBatch(currentPdfRenderedPages + 1, nextBatchEnd);
-            }
-            const allBtn = document.getElementById('btn-pdf-load-all');
-            if (allBtn) {
-              allBtn.onclick = () => renderPdfBatch(currentPdfRenderedPages + 1, currentPdfTotalPages);
-            }
           } else {
             loadMoreBox.style.display = 'none';
             if (pageStat) {
@@ -8732,14 +8765,16 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       }
 
       async function jumpToPdfPage(targetPage) {
-        if (!currentPdfDoc || targetPage < 1 || targetPage > currentPdfTotalPages) return;
-        if (targetPage > currentPdfRenderedPages) {
-          const toPage = Math.min(targetPage + 5, currentPdfTotalPages);
-          await renderPdfBatch(currentPdfRenderedPages + 1, toPage);
-        }
-        const targetEl = document.getElementById(\`pdf-page-wrapper-\${targetPage}\`);
-        if (targetEl) {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!currentPdfDoc || targetPage < 1) return;
+        if (targetPage <= currentPdfRenderedPages) {
+          const targetEl = document.getElementById(\`pdf-page-wrapper-\${targetPage}\`);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          showToast(\`Opening in new tab to view page \${targetPage}...\`, 'info');
+          const url = (currentPdfItem && currentPdfItem.url) ? \`\${currentPdfItem.url}#page=\${targetPage}\` : '#';
+          window.open(url, '_blank', 'noopener,noreferrer');
         }
       }
 
