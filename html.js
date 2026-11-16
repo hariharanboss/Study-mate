@@ -7252,9 +7252,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           return { category: 'office-presentation', ext: ext || 'pptx', label: 'PowerPoint Presentation', icon: 'presentation', iconClass: 'icon-presentation', color: '#ea580c' };
         }
 
-        // 5. Word Documents (DOC, DOCX)
-        if (['doc', 'docx', 'odt', 'rtf'].includes(ext) || mime.includes('word') || mime.includes('wordprocessing')) {
-          return { category: 'office-doc', ext: ext || 'docx', label: 'Word Document', icon: 'file-text', iconClass: 'icon-word', color: '#2563eb' };
+        // 5. Word Documents (DOC, DOCX, ODT, RTF, PAGES, etc.)
+        if (['doc', 'docx', 'odt', 'rtf', 'pages', 'ai', 'psd', 'eps', 'tiff', 'tif'].includes(ext) || mime.includes('word') || mime.includes('wordprocessing')) {
+          return { category: 'office-doc', ext: ext || 'docx', label: 'Document', icon: 'file-text', iconClass: 'icon-word', color: '#2563eb' };
         }
 
         // 6. Spreadsheets (XLS, XLSX, CSV)
@@ -8639,7 +8639,21 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           return;
         }
 
-        // 7. General Web Resources & Links
+        // 7. General Document Fallback (Google Viewer Engine)
+        const googleDocExts = ['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf', 'odt', 'odp', 'ods', 'rtf', 'pages', 'ai', 'psd', 'eps', 'tiff', 'tif'];
+        const isGoogleViewable = googleDocExts.includes(fileInfo.ext) || googleDocExts.some(ext => item.url.toLowerCase().endsWith('.' + ext));
+        if (isGoogleViewable) {
+          const fullPublicUrl = item.url.startsWith('http') ? item.url : (window.location.origin + item.url);
+          const gdocsUrl = \`https://docs.google.com/viewer?url=\${encodeURIComponent(fullPublicUrl)}&embedded=true\`;
+          container.innerHTML = \`
+            <iframe src="\${gdocsUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allowfullscreen></iframe>
+          \`;
+          openModal('modal-preview');
+          refreshIcons();
+          return;
+        }
+
+        // 8. General Web Resources & Links
         window.open(item.url, '_blank', 'noopener,noreferrer');
       }
 
