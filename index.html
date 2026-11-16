@@ -2658,7 +2658,12 @@
     }
     .crumb-back-btn:hover {
       background: rgba(255, 255, 255, 0.16);
-      border-color: var(--border-focus);
+      border-color: var(--accent-primary);
+      color: #fff;
+      transform: translateX(-1px);
+    }
+    .crumb-back-btn:active {
+      transform: scale(0.96);
     }
     .breadcrumbs-scroll-trail {
       display: flex;
@@ -2674,14 +2679,6 @@
     }
     .breadcrumbs-scroll-trail::-webkit-scrollbar {
       display: none;
-    }
-    .crumb-back-btn:hover {
-      background: rgba(65, 45, 21, 0.75);
-      border-color: var(--border-focus);
-      transform: translateX(-2px);
-    }
-    .crumb-back-btn:active {
-      transform: translateX(-1px);
     }
     .crumb-item {
       display: inline-flex;
@@ -8270,7 +8267,12 @@
         updateRecycleBinBadge();
       }
 
+      let isNavigatingBack = false;
       function goToParentFolder() {
+        if (isNavigatingBack) return;
+        isNavigatingBack = true;
+        setTimeout(() => { isNavigatingBack = false; }, 350);
+
         if (state.currentPath && state.currentPath.length > 1) {
           const parent = state.currentPath[state.currentPath.length - 2];
           navigateToFolder(parent.id, true);
@@ -8278,93 +8280,6 @@
           navigateToFolder('root', true);
         }
       }
-
-      // Trackpad Two-Finger Horizontal Swipe Engine (Right Swipe = Back)
-      let accumulatedDeltaX = 0;
-      let isSwipeNavigating = false;
-      let swipeCooldownTimer = null;
-      let swipeResetTimer = null;
-
-      window.addEventListener('wheel', (e) => {
-        // Do not intercept if a modal is open, or if cursor is over a horizontally scrollable element
-        if (document.querySelector('.modal-overlay.show') || e.target.closest('.filter-pills') || e.target.closest('.breadcrumbs-wrapper') || e.target.closest('.card-tags-container')) {
-          return;
-        }
-
-        // Only navigate if currently inside a subfolder that has a parent
-        if (!state.currentPath || state.currentPath.length <= 1) {
-          return;
-        }
-
-        // Lock out during active cooldown
-        if (isSwipeNavigating) return;
-
-        // Detect intentional horizontal swipe movement
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.1 && Math.abs(e.deltaX) >= 4) {
-          if (e.deltaX < 0) {
-            // Two-finger swipe right (negative deltaX on standard trackpad natural scrolling)
-            if (accumulatedDeltaX > 0) accumulatedDeltaX = 0;
-            accumulatedDeltaX += e.deltaX;
-
-            clearTimeout(swipeResetTimer);
-            swipeResetTimer = setTimeout(() => {
-              accumulatedDeltaX = 0;
-            }, 240);
-
-            // Trigger on deliberate two-finger swipe right (<= -50px accumulated)
-            if (accumulatedDeltaX <= -50) {
-              isSwipeNavigating = true;
-              accumulatedDeltaX = 0;
-              clearTimeout(swipeResetTimer);
-
-              goToParentFolder();
-
-              clearTimeout(swipeCooldownTimer);
-              swipeCooldownTimer = setTimeout(() => {
-                isSwipeNavigating = false;
-                accumulatedDeltaX = 0;
-              }, 650);
-            }
-          } else {
-            // User is swiping left (positive deltaX) — reset accumulator so left swipe never triggers Back
-            accumulatedDeltaX = 0;
-          }
-        }
-      }, { passive: true });
-
-      // Mobile Touch Horizontal Swipe Navigation (Swipe Right = Back)
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let touchStartTime = 0;
-      window.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-          touchStartTime = Date.now();
-        }
-      }, { passive: true });
-
-      window.addEventListener('touchend', (e) => {
-        if (e.changedTouches.length === 1) {
-          const target = e.target;
-          if (document.querySelector('.modal-overlay.show') || target.closest('.filter-pills') || target.closest('.breadcrumbs-wrapper') || target.closest('.card-tags-container')) {
-            return;
-          }
-
-          const deltaX = e.changedTouches[0].clientX - touchStartX;
-          const deltaY = e.changedTouches[0].clientY - touchStartY;
-          const duration = Date.now() - touchStartTime;
-
-          // Deliberate horizontal right swipe (swipe right > 55px within 450ms)
-          // deltaX > 55 means finger moved from left to right (Back)
-          // deltaX < -55 means finger moved from right to left (Left swipe, ignored)
-          if (deltaX > 55 && deltaX > Math.abs(deltaY) * 1.3 && duration < 450) {
-            if (state.currentPath && state.currentPath.length > 1) {
-              goToParentFolder();
-            }
-          }
-        }
-      }, { passive: true });
 
       // Zero-Glitch Mobile Back Button & Popstate Trap
       window.addEventListener('popstate', (e) => {
@@ -8420,23 +8335,21 @@
 
       if (els.breadcrumbs) {
         els.breadcrumbs.addEventListener('click', (e) => {
-          if (e.target.closest('#btn-crumb-back')) {
+          const backBtn = e.target.closest('#btn-crumb-back');
+          if (backBtn) {
+            e.preventDefault();
+            e.stopPropagation();
             goToParentFolder();
             return;
           }
           const crumb = e.target.closest('.crumb-item');
           if (crumb && crumb.dataset.id) {
+            e.preventDefault();
+            e.stopPropagation();
             navigateToFolder(crumb.dataset.id);
           }
         });
       }
-
-      // Direct Back Button Click in controls toolbar
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('#btn-crumb-back')) {
-          goToParentFolder();
-        }
-      });
 
       els.btnHome.addEventListener('click', () => navigateToFolder('root'));
 
