@@ -8490,9 +8490,40 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           };
           const brand = brandColors[fileInfo.category] || brandColors['office-doc'];
 
+          const cardHtml = \`
+            <div class="office-preview-card">
+              <div class="office-doc-icon-box" style="background:\${brand.bg}; border:2px solid \${brand.border}; color:\${brand.border};">
+                <i data-lucide="\${brand.icon}" style="width:40px; height:40px;"></i>
+              </div>
+              <div class="office-doc-title">\${item.name}</div>
+              <div class="office-doc-meta">
+                <span>\${brand.name}</span>
+                <span>•</span>
+                <span>\${formatFileSize(item.fileSize) || 'Document'}</span>
+                <span>•</span>
+                <span style="color:#10b981;">Ready to View</span>
+              </div>
+              <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; max-width:550px;">
+                <a href="\${downloadBtn.href}" download="\${item.name}" class="btn-glass btn-primary" style="padding:10px 22px; font-size:0.88rem;">
+                  <i data-lucide="download" class="lucide-icon"></i>
+                  <span>Download File</span>
+                </a>
+                <a href="\${officeEmbedUrl}" target="_blank" class="btn-glass" style="padding:10px 20px; font-size:0.88rem;">
+                  <i data-lucide="external-link" class="lucide-icon"></i>
+                  <span>Open in Web Office</span>
+                </a>
+              </div>
+              \${isLocal ? \`
+                <p style="font-size:0.75rem; color:var(--text-subtle); margin-top:24px; max-width:440px;">
+                  💡 Note: Direct iframe slide embeds activate automatically when deployed on live servers. On local development, click "Download" or "Open in New Tab" to view with your native apps.
+                </p>
+              \` : ''}
+            </div>
+          \`;
+
           container.innerHTML = \`
-            <div class="office-viewer-root">
-              <div class="office-viewer-bar">
+            <div class="office-viewer-root" style="width:100%; height:100%; display:flex; flex-direction:column; flex:1; min-height:0;">
+              <div class="office-viewer-bar" style="flex-shrink:0;">
                 <div style="display:flex; align-items:center; gap:8px;">
                   <span class="card-tag" style="background:\${brand.bg}; color:\${brand.border}; border:1px solid \${brand.border}; font-weight:700;">
                     \${(fileInfo.ext || 'OFFICE').toUpperCase()}
@@ -8500,50 +8531,22 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                   <span style="font-size:0.82rem; color:var(--text-subtle);">\${brand.name}</span>
                 </div>
                 <div class="office-tabs">
-                  <button type="button" class="office-tab-btn active" id="tab-office-card">
-                    <i data-lucide="file-check" style="width:13px; height:13px;"></i>
-                    <span>Presentation View</span>
+                  <button type="button" class="office-tab-btn active" id="tab-google-docs">
+                    <i data-lucide="layout" style="width:13px; height:13px;"></i>
+                    <span>Google Viewer</span>
                   </button>
                   <button type="button" class="office-tab-btn" id="tab-office-online">
                     <i data-lucide="globe" style="width:13px; height:13px;"></i>
                     <span>Office Online</span>
                   </button>
-                  <button type="button" class="office-tab-btn" id="tab-google-docs">
-                    <i data-lucide="layout" style="width:13px; height:13px;"></i>
-                    <span>Google Viewer</span>
+                  <button type="button" class="office-tab-btn" id="tab-office-card">
+                    <i data-lucide="file-check" style="width:13px; height:13px;"></i>
+                    <span>Overview & Download</span>
                   </button>
                 </div>
               </div>
-              <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:560px;">
-                <div class="office-preview-card">
-                  <div class="office-doc-icon-box" style="background:\${brand.bg}; border:2px solid \${brand.border}; color:\${brand.border};">
-                    <i data-lucide="\${brand.icon}" style="width:40px; height:40px;"></i>
-                  </div>
-                  <div class="office-doc-title">\${item.name}</div>
-                  <div class="office-doc-meta">
-                    <span>\${brand.name}</span>
-                    <span>•</span>
-                    <span>\${formatFileSize(item.fileSize) || 'Document'}</span>
-                    <span>•</span>
-                    <span style="color:#10b981;">Ready to View</span>
-                  </div>
-                  <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; max-width:550px;">
-
-                    <a href="\${downloadBtn.href}" download="\${item.name}" class="btn-glass btn-primary" style="padding:10px 22px; font-size:0.88rem;">
-                      <i data-lucide="download" class="lucide-icon"></i>
-                      <span>Download for PowerPoint / Word</span>
-                    </a>
-                    <a href="\${officeEmbedUrl}" target="_blank" class="btn-glass" style="padding:10px 20px; font-size:0.88rem;">
-                      <i data-lucide="external-link" class="lucide-icon"></i>
-                      <span>Open in Web Office</span>
-                    </a>
-                  </div>
-                  \${isLocal ? \`
-                    <p style="font-size:0.75rem; color:var(--text-subtle); margin-top:24px; max-width:440px;">
-                      💡 Note: Direct iframe slide embeds activate automatically when deployed on live servers. On local development, click "Download" or "Open in New Tab" to view with your native apps.
-                    </p>
-                  \` : ''}
-                </div>
+              <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:0; width:100%; height:100%; overflow:hidden;">
+                <iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allowfullscreen></iframe>
               </div>
             </div>
           \`;
@@ -8557,31 +8560,26 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           const tabGDocs = document.getElementById('tab-google-docs');
 
           function setActiveTab(activeBtn) {
-            [tabCard, tabOffice, tabGDocs].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
+            [tabGDocs, tabOffice, tabCard].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
           }
 
-          if (tabCard) {
-            tabCard.onclick = () => {
-              setActiveTab(tabCard);
-              openResourceItem(item);
-            };
-          }
-          const startCardPresentBtn = document.getElementById('btn-start-presentation-card');
-          if (startCardPresentBtn) {
-            startCardPresentBtn.onclick = () => {
-              enterPresentationMode(item, fileInfo);
+          if (tabGDocs) {
+            tabGDocs.onclick = () => {
+              setActiveTab(tabGDocs);
+              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allowfullscreen></iframe>\`;
             };
           }
           if (tabOffice) {
             tabOffice.onclick = () => {
               setActiveTab(tabOffice);
-              area.innerHTML = \`<iframe src="\${officeEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;"></iframe>\`;
+              area.innerHTML = \`<iframe src="\${officeEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allowfullscreen></iframe>\`;
             };
           }
-          if (tabGDocs) {
-            tabGDocs.onclick = () => {
-              setActiveTab(tabGDocs);
-              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;"></iframe>\`;
+          if (tabCard) {
+            tabCard.onclick = () => {
+              setActiveTab(tabCard);
+              area.innerHTML = cardHtml;
+              refreshIcons();
             };
           }
           return;
