@@ -1426,15 +1426,18 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         white-space: nowrap !important;
       }
       #modal-preview .modal-glass.large .modal-body {
-        padding: 8px !important;
+        padding: 4px !important;
         max-height: calc(94vh - 110px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
       /* Reduce viewer height on mobile so it fits within the viewport */
       #modal-preview .pdf-viewer-container {
         min-height: 320px !important;
         height: 100% !important;
+        flex: 1 !important;
+        overflow: hidden !important;
       }
       #modal-preview .pdf-viewer-container iframe {
         min-height: 320px !important;
@@ -3304,17 +3307,18 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       gap: 10px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-bottom: 12px;
-      padding: 4px 0;
+      margin-bottom: 10px;
+      padding: 2px 0;
+      flex-shrink: 0;
     }
     .pdf-tool-btn {
-      padding: 8px 16px;
+      padding: 7px 15px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border-specular);
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
       cursor: pointer;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       font-family: var(--font-body);
       transition: var(--transition-smooth);
@@ -3328,25 +3332,71 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       border-color: var(--accent-primary);
     }
     .pdf-canvas-wrap {
-      max-height: 72vh;
+      flex: 1;
+      height: 72vh;
+      max-height: calc(90vh - 110px);
       overflow-y: auto;
-      overflow-x: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      padding: 12px;
+      gap: 14px;
+      padding: 8px 6px;
       border-radius: 8px;
       background: rgba(0, 0, 0, 0.25);
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       width: 100%;
+    }
+    .pdf-page-wrapper {
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      content-visibility: auto;
+      contain-intrinsic-size: 600px;
+      will-change: transform;
     }
     .pdf-page-canvas {
       max-width: 100%;
-      border-radius: 2px;
+      border-radius: 4px;
       background: #fff;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
       display: block;
+      height: auto;
+    }
+    .pdf-page-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #64748b;
+      font-size: 0.82rem;
+      font-weight: 500;
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      background: #f8fafc;
+    }
+    .pdf-page-num-badge {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      z-index: 2;
     }
     .pdf-note {
       font-size: 0.8rem;
@@ -3357,6 +3407,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       background: rgba(255, 255, 255, 0.05);
       border-radius: 8px;
       border: 1px dashed var(--border-specular);
+      flex-shrink: 0;
     }
 
     /* IDE Code Viewer */
@@ -8694,11 +8745,16 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       }
 
       // ==========================================================================
-      // CRISP HIGH-PERFORMANCE PDF VIEWER (FROM PERSONAL-LMS-MAIN)
+      // CRISP 60FPS LAZY-RENDERED PDF VIEWER (FROM PERSONAL-LMS-MAIN ARCHITECTURE)
       // ==========================================================================
       let activePdfLoadingTask = null;
+      let activePdfObserver = null;
 
       function cleanupActivePdf() {
+        if (activePdfObserver) {
+          activePdfObserver.disconnect();
+          activePdfObserver = null;
+        }
         if (activePdfLoadingTask && activePdfLoadingTask.destroy) {
           try { activePdfLoadingTask.destroy(); } catch (e) {}
         }
@@ -8730,8 +8786,10 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         });
       }
 
-      // Renders PDFs with PDF.js to <canvas> pages with exact devicePixelRatio scaling,
-      // which works inline and razor-sharp on both mobile and desktop.
+      // Renders PDFs with PDF.js using on-demand IntersectionObserver page rendering.
+      // Page 1 is rendered immediately so the PDF appears instantly.
+      // Subsequent pages render proactively as they scroll into view, keeping memory low
+      // and scrolling completely lag-free (60fps) with crisp high-DPI scaling.
       async function renderPdfViewer(item, container) {
         if (!container) return;
         cleanupActivePdf();
@@ -8778,27 +8836,90 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           const pagesContainer = document.getElementById('pdfPagesContainer');
           if (!pagesContainer) return;
 
-          const ratio = window.devicePixelRatio || 1;
-          const cssWidth = Math.min((pagesContainer.clientWidth || 800) - 24, 1000);
+          // Optimal sharp ratio capped at 1.75 to balance ultra-crisp Retina text with 60fps GPU smoothness
+          const ratio = Math.min(window.devicePixelRatio || 1, 1.75);
+          const cssWidth = Math.min((pagesContainer.clientWidth || 800) - 24, 900);
 
+          // Get first page to calculate base aspect ratio and container dimensions
+          const firstPage = await pdf.getPage(1);
+          const base = firstPage.getViewport({ scale: 1 });
+          const baseScale = (cssWidth / base.width) * ratio;
+          const initialViewport = firstPage.getViewport({ scale: baseScale });
+          const approxHeight = Math.floor(initialViewport.height / ratio);
+
+          // Render a single page into its wrapper container
+          const renderPageIntoWrapper = async (pageNum, wrapper) => {
+            if (!wrapper || wrapper.dataset.rendered === 'true') return;
+            wrapper.dataset.rendered = 'true';
+            try {
+              const page = await pdf.getPage(pageNum);
+              const pBase = page.getViewport({ scale: 1 });
+              const pScale = (cssWidth / pBase.width) * ratio;
+              const pViewport = page.getViewport({ scale: pScale });
+
+              const canvas = document.createElement('canvas');
+              canvas.className = 'pdf-page-canvas';
+              canvas.width = Math.floor(pViewport.width);
+              canvas.height = Math.floor(pViewport.height);
+              canvas.style.width = cssWidth + 'px';
+              canvas.style.height = Math.floor(pViewport.height / ratio) + 'px';
+
+              const ctx = canvas.getContext('2d');
+              await page.render({ canvasContext: ctx, viewport: pViewport }).promise;
+
+              if (!document.getElementById('pdfPagesContainer')) return; // preview closed
+              wrapper.innerHTML = '';
+              wrapper.appendChild(canvas);
+
+              const badge = document.createElement('div');
+              badge.className = 'pdf-page-num-badge';
+              badge.textContent = \`Page \${pageNum} of \${pageCount}\`;
+              wrapper.appendChild(badge);
+            } catch (err) {
+              console.warn(\`Error rendering page \${pageNum}:\`, err);
+            }
+          };
+
+          // Setup IntersectionObserver for smooth on-demand rendering as the user scrolls
+          activePdfObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const el = entry.target;
+                const p = parseInt(el.dataset.page, 10);
+                if (activePdfObserver) activePdfObserver.unobserve(el);
+                renderPageIntoWrapper(p, el);
+              }
+            });
+          }, { root: pagesContainer, rootMargin: '450px 0px' });
+
+          // Create page placeholder slots with exact dimensions
           for (let n = 1; n <= pagesToRender; n++) {
-            const page = await pdf.getPage(n);
-            const base = page.getViewport({ scale: 1 });
-            const scale = (cssWidth / base.width) * ratio;
-            const viewport = page.getViewport({ scale: scale });
-            const canvas = document.createElement('canvas');
-            canvas.className = 'pdf-page-canvas';
-            canvas.width = Math.floor(viewport.width);
-            canvas.height = Math.floor(viewport.height);
-            canvas.style.width = cssWidth + 'px';
-            canvas.style.height = Math.floor(viewport.height / ratio) + 'px';
-            const ctx = canvas.getContext('2d');
-            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-            if (!document.getElementById('pdfPagesContainer')) return; // preview closed
-            pagesContainer.appendChild(canvas);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pdf-page-wrapper';
+            wrapper.id = \`pdf-page-\${n}\`;
+            wrapper.dataset.page = n;
+            wrapper.style.width = cssWidth + 'px';
+            wrapper.style.minHeight = approxHeight + 'px';
+
+            wrapper.innerHTML = \`
+              <div class="pdf-page-placeholder">
+                <div class="loading-spinner" style="width:22px; height:22px; margin-bottom:6px; border-width:2px;"></div>
+                <span>Loading Page \${n}...</span>
+              </div>
+            \`;
+            pagesContainer.appendChild(wrapper);
+
+            if (n === 1) {
+              // Render page 1 immediately so reading begins instantly
+              renderPageIntoWrapper(1, wrapper);
+            } else {
+              activePdfObserver.observe(wrapper);
+            }
           }
           return;
         } catch (_error) {
+          console.warn('PDF.js rendering fallback to iframe:', _error);
+        }
           console.warn('PDF.js rendering fallback to iframe:', _error);
         }
 
