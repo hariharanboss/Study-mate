@@ -401,27 +401,60 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
     }
     .folder-card .folder-card-top-actions {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 8px;
+      right: 8px;
       display: flex;
       align-items: center;
       gap: 4px;
-      z-index: 5;
+      z-index: 6;
     }
     .folder-card .folder-card-top-badges {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 8px;
+      left: 8px;
       display: flex;
       align-items: center;
       gap: 4px;
-      z-index: 5;
+      z-index: 6;
+    }
+    .folder-card .star-btn {
+      width: 28px !important;
+      height: 28px !important;
+      min-width: 28px !important;
+      min-height: 28px !important;
+      border-radius: 999px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: var(--text-muted) !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 10 !important;
+      padding: 0 !important;
+    }
+    .folder-card .star-btn:hover,
+    .folder-card .star-btn.starred {
+      background: rgba(245, 158, 11, 0.20) !important;
+      border-color: rgba(245, 158, 11, 0.40) !important;
+      color: #f59e0b !important;
+    }
+    .folder-card .btn-card-more {
+      width: 28px !important;
+      height: 28px !important;
+      min-width: 28px !important;
+      min-height: 28px !important;
+      border-radius: 999px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 10 !important;
+      padding: 0 !important;
     }
     .folder-card .card-icon-box {
-      width: 48px !important;
-      height: 48px !important;
-      border-radius: 14px !important;
-      margin: 0 auto 10px auto !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 13px !important;
+      margin: 12px auto 8px auto !important;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -981,7 +1014,20 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         display: flex !important;
         flex: 1 1 auto !important;
         min-width: 0 !important;
-        max-width: calc(100% - 148px) !important;
+        max-width: none !important;
+      }
+      #btn-toolbar-options span {
+        display: none !important;
+      }
+      #btn-toolbar-options {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 0 !important;
+        justify-content: center !important;
+        border-radius: 999px !important;
+      }
+      #btn-toolbar-options i:last-child {
+        display: none !important;
       }
       .mobile-filter-btn {
         width: 100% !important;
@@ -2586,12 +2632,15 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       font-size: 0.9rem;
     }
     .crumb-back-btn {
+      position: sticky;
+      left: 0;
+      z-index: 10;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 5px 12px;
       margin-right: 6px;
-      background: rgba(65, 45, 21, 0.45);
+      background: var(--bg-surface);
       border: 1px solid var(--border-specular);
       border-radius: var(--radius-sm);
       color: var(--text-main);
@@ -2600,6 +2649,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       cursor: pointer;
       font-family: var(--font-body);
       transition: var(--transition-smooth);
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.45);
+      flex-shrink: 0;
     }
     .crumb-back-btn:hover {
       background: rgba(65, 45, 21, 0.75);
@@ -4609,6 +4660,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       justify-content: space-between;
       padding: 8px 12px;
       gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .callout-body {
+      max-height: 200px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .callout-header-left {
@@ -7753,14 +7811,14 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             return \`
               <div class="explorer-card folder-card \${isSelected ? 'selected' : ''}" data-id="\${item.id}" data-type="\${item.type}" \${isDraggable}>
                 <div class="folder-card-top-badges">
+                  <button class="star-btn \${isStarred ? 'starred' : ''}" data-star-id="\${item.id}" title="\${isStarred ? 'Remove from Starred' : 'Add to Starred'}">
+                    <i data-lucide="star" style="width:13px; height:13px;"></i>
+                  </button>
                   \${item.section && item.section !== 'ALL' ? \`<span class="card-tag" style="font-size:0.68rem; padding:2px 7px;">Sec \${item.section}</span>\` : ''}
                   \${item._contextPath ? \`<span class="card-tag context-tag" title="\${item._contextPath}" style="font-size:0.68rem; padding:2px 6px;"><i data-lucide="folder" style="width:9px; height:9px;"></i></span>\` : ''}
                 </div>
 
                 <div class="folder-card-top-actions">
-                  <button class="star-btn \${isStarred ? 'starred' : ''}" data-star-id="\${item.id}" title="\${isStarred ? 'Remove from Starred' : 'Add to Starred'}">
-                    <i data-lucide="star" style="width:14px; height:14px;"></i>
-                  </button>
                   <button class="btn-action-icon btn-card-more" data-id="\${item.id}" title="Options Menu">
                     <i data-lucide="more-vertical" style="width:14px; height:14px;"></i>
                   </button>
@@ -7976,6 +8034,17 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                 refreshIcons();
               }
             }
+          });
+        });
+
+        // 1-Tap anywhere on callout header to toggle expand/collapse
+        els.explorerGrid.querySelectorAll('.callout-header').forEach(hdr => {
+          hdr.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-customize-callout')) return;
+            const card = hdr.closest('.callout-card');
+            if (!card) return;
+            const btn = card.querySelector('.btn-collapse-callout');
+            if (btn) btn.click();
           });
         });
 
@@ -13254,7 +13323,8 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           const badge = c.badge || 'GUIDE';
           const title = c.title || 'Folder Guide';
           const font = c.font || 'sans';
-          const isCollapsed = !!c.collapsed;
+          // Default to collapsed so it does not dominate mobile viewport
+          const isCollapsed = c.collapsed !== false;
 
           return \`
             <div class="callout-card font-\${font} \${isCollapsed ? 'collapsed' : ''}" id="card-\${c.id}"
