@@ -1,5 +1,5 @@
 // Progressive Web App (PWA) Service Worker for Department LMS
-const CACHE_NAME = 'dept-lms-cache-v37';
+const CACHE_NAME = 'dept-lms-cache-v38';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json'

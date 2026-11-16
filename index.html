@@ -3226,56 +3226,17 @@
     .pdf-reader-toolbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 10px;
-      padding: 9px 16px;
+      padding: 8px 16px;
       background: rgba(15, 23, 42, 0.96);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       z-index: 10;
-    }
-    .pdf-tb-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .pdf-tb-badge {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: rgba(239, 68, 68, 0.16);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      letter-spacing: 0.04em;
-    }
-    .pdf-tb-stat {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 500;
     }
     .pdf-tb-right {
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-wrap: wrap;
-    }
-    .pdf-jump-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.78rem;
-      color: var(--text-subtle);
-    }
-    .pdf-jump-input {
-      width: 48px;
-      padding: 4px 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px;
-      color: #fff;
-      font-size: 0.8rem;
-      text-align: center;
     }
     .btn-pdf-tool {
       display: inline-flex;
@@ -8574,17 +8535,7 @@
         container.innerHTML = `
           <div class="pdf-reader-root" id="pdf-reader-root">
             <div class="pdf-reader-toolbar">
-              <div class="pdf-tb-left">
-                <span class="pdf-tb-badge">PDF</span>
-                <span class="pdf-tb-stat" id="pdf-page-stat">Initializing smooth viewer...</span>
-              </div>
               <div class="pdf-tb-right">
-                <div class="pdf-jump-box">
-                  <span>Go to:</span>
-                  <input type="number" id="pdf-jump-input" min="1" max="1" value="1" class="pdf-jump-input" />
-                  <button type="button" class="btn-pdf-tool" id="btn-pdf-jump">Go</button>
-                </div>
-                <div class="pdf-divider"></div>
                 <button type="button" class="btn-pdf-tool" id="btn-pdf-zoom-out" title="Zoom Out (-)">-</button>
                 <span class="pdf-zoom-level" id="pdf-zoom-text">100%</span>
                 <button type="button" class="btn-pdf-tool" id="btn-pdf-zoom-in" title="Zoom In (+)">+</button>
@@ -8613,9 +8564,6 @@
           });
           currentPdfDoc = await activePdfLoadingTask.promise;
           currentPdfTotalPages = currentPdfDoc.numPages;
-
-          const jumpInput = document.getElementById('pdf-jump-input');
-          if (jumpInput) jumpInput.max = currentPdfTotalPages;
 
           const loadingIndicator = document.getElementById('pdf-loading-indicator');
           if (loadingIndicator) loadingIndicator.style.display = 'none';
@@ -8733,24 +8681,9 @@
       }
 
       function attachPdfToolbarEvents() {
-        const jumpInput = document.getElementById('pdf-jump-input');
-        const jumpBtn = document.getElementById('btn-pdf-jump');
         const zoomInBtn = document.getElementById('btn-pdf-zoom-in');
         const zoomOutBtn = document.getElementById('btn-pdf-zoom-out');
         const fitBtn = document.getElementById('btn-pdf-fit-width');
-
-        if (jumpBtn && jumpInput) {
-          jumpBtn.onclick = () => {
-            const val = parseInt(jumpInput.value, 10);
-            if (!isNaN(val)) jumpToPdfPage(val);
-          };
-          jumpInput.onkeydown = (e) => {
-            if (e.key === 'Enter') {
-              const val = parseInt(jumpInput.value, 10);
-              if (!isNaN(val)) jumpToPdfPage(val);
-            }
-          };
-        }
 
         if (zoomInBtn) {
           zoomInBtn.onclick = () => reRenderWithZoom(currentPdfZoom + 0.15);
