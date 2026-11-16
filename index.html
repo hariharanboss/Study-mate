@@ -1248,12 +1248,9 @@
         display: flex !important;
         align-items: center !important;
         flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        scrollbar-width: none !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 6px 10px !important;
-        gap: 4px !important;
+        overflow: hidden !important;
+        padding: 6px 8px !important;
+        gap: 6px !important;
         border-radius: 12px !important;
         margin-bottom: 12px !important;
       }
@@ -2630,26 +2627,53 @@
       padding: 9px 18px;
       font-size: 0.9rem;
     }
+    .breadcrumbs-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      backdrop-filter: blur(var(--blur-strength));
+      -webkit-backdrop-filter: blur(var(--blur-strength));
+      border: 1px solid var(--border-specular);
+      border-radius: var(--radius-md);
+      padding: 6px 10px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
     .crumb-back-btn {
-      position: sticky;
-      left: 0;
-      z-index: 10;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      margin-right: 6px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-specular);
+      gap: 5px;
+      padding: 5px 10px;
       border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-specular);
       color: var(--text-main);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
       font-family: var(--font-body);
       transition: var(--transition-smooth);
-      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.45);
       flex-shrink: 0;
+    }
+    .crumb-back-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--border-focus);
+    }
+    .breadcrumbs-scroll-trail {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px 0;
+    }
+    .breadcrumbs-scroll-trail::-webkit-scrollbar {
+      display: none;
     }
     .crumb-back-btn:hover {
       background: rgba(65, 45, 21, 0.75);
@@ -4637,67 +4661,58 @@
     .callout-card {
       position: relative;
       width: 100%;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--callout-border, rgba(59, 130, 246, 0.20));
-      border-left: 3px solid var(--callout-color, var(--accent-primary));
-      background: linear-gradient(90deg, var(--callout-bg-glow, rgba(59, 130, 246, 0.06)) 0%, var(--bg-surface) 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--callout-border, rgba(59, 130, 246, 0.25));
+      border-left: 5px solid var(--callout-color, var(--accent-primary));
+      background: linear-gradient(90deg, var(--callout-bg-glow, rgba(59, 130, 246, 0.10)) 0%, var(--bg-surface) 100%);
       backdrop-filter: blur(var(--blur-strength));
       -webkit-backdrop-filter: blur(var(--blur-strength));
-      box-shadow: 0 2px 10px var(--callout-shadow, rgba(59, 130, 246, 0.05));
+      box-shadow: 0 8px 26px var(--callout-shadow, rgba(59, 130, 246, 0.08));
       overflow: hidden;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .callout-card:hover {
-      box-shadow: 0 4px 16px var(--callout-shadow-hover, rgba(59, 130, 246, 0.10));
-      border-color: var(--callout-border-hover, rgba(59, 130, 246, 0.35));
+      box-shadow: 0 12px 36px var(--callout-shadow-hover, rgba(59, 130, 246, 0.15));
+      border-color: var(--callout-border-hover, rgba(59, 130, 246, 0.45));
     }
 
     .callout-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
-      gap: 8px;
+      padding: 14px 18px;
+      gap: 12px;
       cursor: pointer;
       user-select: none;
-    }
-    .callout-body {
-      max-height: 200px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
     .callout-header-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
     .callout-icon-box {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--callout-icon-bg, rgba(59, 130, 246, 0.18));
       color: var(--callout-color, var(--accent-primary));
       flex-shrink: 0;
-      box-shadow: 0 0 8px var(--callout-icon-glow, rgba(59, 130, 246, 0.15));
-    }
-    .callout-icon-box svg {
-      width: 14px !important;
-      height: 14px !important;
+      box-shadow: 0 0 14px var(--callout-icon-glow, rgba(59, 130, 246, 0.22));
     }
 
     .callout-badge {
-      font-size: 0.65rem;
+      font-size: 0.72rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 2px 6px;
+      letter-spacing: 0.06em;
+      padding: 3px 9px;
       border-radius: var(--radius-sm);
       background: var(--callout-badge-bg, rgba(59, 130, 246, 0.16));
       color: var(--callout-color, var(--accent-primary));
@@ -4706,8 +4721,8 @@
 
     .callout-title {
       font-family: var(--font-heading);
-      font-size: 0.88rem;
-      font-weight: 600;
+      font-size: 1.05rem;
+      font-weight: 700;
       color: var(--text-main);
       letter-spacing: -0.01em;
     }
@@ -4745,9 +4760,9 @@
     }
 
     .callout-body {
-      padding: 2px 14px 10px 44px;
-      font-size: 0.82rem;
-      line-height: 1.48;
+      padding: 0 20px 18px 66px;
+      font-size: 0.92rem;
+      line-height: 1.68;
       color: var(--text-muted);
       transition: all 0.25s ease;
     }
@@ -5150,9 +5165,41 @@
         padding-top: env(safe-area-inset-top, 0px) !important;
         padding-bottom: env(safe-area-inset-bottom, 0px) !important;
       }
+      .callout-card {
+        border-radius: var(--radius-md) !important;
+        border-left-width: 3px !important;
+        box-shadow: 0 2px 10px var(--callout-shadow, rgba(59, 130, 246, 0.05)) !important;
+      }
+      .callout-header {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+      }
+      .callout-icon-box {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 6px !important;
+      }
+      .callout-icon-box svg {
+        width: 14px !important;
+        height: 14px !important;
+      }
+      .callout-badge {
+        font-size: 0.65rem !important;
+        padding: 2px 6px !important;
+      }
+      .callout-title {
+        font-size: 0.88rem !important;
+        font-weight: 600 !important;
+      }
+      .callout-body {
+        padding: 2px 14px 10px 44px !important;
+        font-size: 0.82rem !important;
+        line-height: 1.48 !important;
+        max-height: 200px !important;
+        overflow-y: auto !important;
+      }
       .pdf-reader-toolbar {
-        padding: 6px 12px !important;
-        gap: 6px !important;
+        display: none !important;
       }
       .pdf-scroll-stage {
         padding: 10px 4px !important;
@@ -7174,16 +7221,17 @@
               const isLast = idx === path.length - 1;
               return `
                 <span class="crumb-item ${isLast ? 'current' : ''}" data-id="${crumb.id}">
-                  ${idx === 0 ? '<i data-lucide="home" class="lucide-icon" style="width:15px; height:15px;"></i>' : ''}
+                  ${idx === 0 ? '<i data-lucide="home" class="lucide-icon" style="width:14px; height:14px;"></i>' : ''}
                   <span>${crumb.name}</span>
                 </span>
                 ${!isLast ? '<span class="crumb-divider"><i data-lucide="chevron-right" style="width:14px; height:14px;"></i></span>' : ''}
               `;
             }).join('');
 
-            els.breadcrumbs.innerHTML = backBtnHtml + crumbsHtml;
+            els.breadcrumbs.innerHTML = backBtnHtml + `<div class="breadcrumbs-scroll-trail" id="breadcrumbs-scroll-trail">${crumbsHtml}</div>`;
             setTimeout(() => {
-              if (els.breadcrumbs) els.breadcrumbs.scrollLeft = els.breadcrumbs.scrollWidth;
+              const trail = document.getElementById('breadcrumbs-scroll-trail');
+              if (trail) trail.scrollLeft = trail.scrollWidth;
             }, 0);
 
             // Fluid drag-and-drop targeting on breadcrumbs to move entire folders or files up the hierarchy
@@ -8873,14 +8921,7 @@
 
         container.innerHTML = `
           <div class="pdf-reader-root" id="pdf-reader-root">
-            <div class="pdf-reader-toolbar">
-              <div class="pdf-tb-right">
-                <button type="button" class="btn-pdf-tool" id="btn-pdf-zoom-out" title="Zoom Out (-)">-</button>
-                <span class="pdf-zoom-level" id="pdf-zoom-text">100%</span>
-                <button type="button" class="btn-pdf-tool" id="btn-pdf-zoom-in" title="Zoom In (+)">+</button>
-                <button type="button" class="btn-pdf-tool" id="btn-pdf-fit-width" title="Fit to width">Fit</button>
-              </div>
-            </div>
+
             <div class="pdf-scroll-stage" id="pdf-scroll-stage">
               <div class="pdf-loading-indicator" id="pdf-loading-indicator" style="padding:40px 20px; text-align:center;">
                 <div class="loading-spinner" style="width:36px; height:36px; margin:0 auto 14px; border-width:3px;"></div>
@@ -8899,7 +8940,8 @@
           activePdfLoadingTask = pdfjs.getDocument({
             url: item.url,
             cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-            cMapPacked: true
+            cMapPacked: true,
+            standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/'
           });
           currentPdfDoc = await activePdfLoadingTask.promise;
           currentPdfTotalPages = currentPdfDoc.numPages;
@@ -13322,8 +13364,10 @@
           const badge = c.badge || 'GUIDE';
           const title = c.title || 'Folder Guide';
           const font = c.font || 'sans';
-          // Default to collapsed so it does not dominate mobile viewport
-          const isCollapsed = c.collapsed !== false;
+          // Desktop: fully open by default (unless explicitly collapsed).
+          // Mobile: minimal & compact by default (unless explicitly expanded).
+          const isMobile = window.innerWidth <= 768;
+          const isCollapsed = isMobile ? (c.collapsed !== false) : (c.collapsed === true);
 
           return `
             <div class="callout-card font-${font} ${isCollapsed ? 'collapsed' : ''}" id="card-${c.id}"
