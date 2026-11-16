@@ -20,13 +20,6 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- PDF.js Engine from personal-lms-main -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    if (typeof pdfjsLib !== 'undefined' && pdfjsLib && pdfjsLib.GlobalWorkerOptions) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
-  </script>
 
   <style>
     /* ==========================================================================
@@ -1425,18 +1418,15 @@
         white-space: nowrap !important;
       }
       #modal-preview .modal-glass.large .modal-body {
-        padding: 4px !important;
+        padding: 8px !important;
         max-height: calc(94vh - 110px) !important;
-        overflow: hidden !important;
-        display: flex !important;
-        flex-direction: column !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
       }
       /* Reduce viewer height on mobile so it fits within the viewport */
       #modal-preview .pdf-viewer-container {
         min-height: 320px !important;
         height: 100% !important;
-        flex: 1 !important;
-        overflow: hidden !important;
       }
       #modal-preview .pdf-viewer-container iframe {
         min-height: 320px !important;
@@ -2625,19 +2615,6 @@
     .breadcrumbs-bar {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: var(--bg-surface);
-      backdrop-filter: blur(var(--blur-strength));
-      -webkit-backdrop-filter: blur(var(--blur-strength));
-      border: 1px solid var(--border-specular);
-      border-radius: var(--radius-lg);
-      padding: 9px 18px;
-      font-size: 0.9rem;
-    }
-    .breadcrumbs-bar {
-      display: flex;
-      align-items: center;
       gap: 8px;
       background: var(--bg-surface);
       backdrop-filter: blur(var(--blur-strength));
@@ -3300,114 +3277,7 @@
       flex: 1;
     }
 
-    /* High-Performance Crisp PDF Viewer from personal-lms-main */
-    .pdf-toolbar {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-      padding: 2px 0;
-      flex-shrink: 0;
-    }
-    .pdf-tool-btn {
-      padding: 7px 15px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-specular);
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 600;
-      font-family: var(--font-body);
-      transition: var(--transition-smooth);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .pdf-tool-btn:hover {
-      background: var(--accent-primary);
-      color: #fff;
-      border-color: var(--accent-primary);
-    }
-    .pdf-canvas-wrap {
-      flex: 1;
-      height: 72vh;
-      max-height: calc(90vh - 110px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      padding: 8px 6px;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.25);
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      width: 100%;
-    }
-    .pdf-page-wrapper {
-      position: relative;
-      background: #ffffff;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-      border-radius: 4px;
-      overflow: hidden;
-      max-width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      content-visibility: auto;
-      contain-intrinsic-size: 600px;
-      will-change: transform;
-    }
-    .pdf-page-canvas {
-      max-width: 100%;
-      border-radius: 4px;
-      background: #fff;
-      display: block;
-      height: auto;
-    }
-    .pdf-page-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: #64748b;
-      font-size: 0.82rem;
-      font-weight: 500;
-      width: 100%;
-      height: 100%;
-      min-height: 400px;
-      background: #f8fafc;
-    }
-    .pdf-page-num-badge {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.65);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 500;
-      padding: 2px 7px;
-      border-radius: 999px;
-      backdrop-filter: blur(4px);
-      pointer-events: none;
-      z-index: 2;
-    }
-    .pdf-note {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-top: 10px;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      border: 1px dashed var(--border-specular);
-      flex-shrink: 0;
-    }
+
 
     /* IDE Code Viewer */
     .code-viewer-root {
@@ -8170,7 +8040,6 @@
             const embed = document.getElementById('preview-embed-container');
             if (embed) embed.innerHTML = '';
             activeCurrentResourceItem = null;
-            if (typeof cleanupActivePdf === 'function') cleanupActivePdf();
             if (window.location.hash.startsWith('#/file/')) {
               const targetHash = (state.currentFolderId === 'root') ? '#/' : `#/folder/${state.currentFolderId}`;
               window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
@@ -8731,235 +8600,18 @@
           return;
         }
 
-        // 6. PDF Documents & Default Embeds (Optimized Paginated View)
+        // 6. PDF Documents & Default Embeds
         if (fileInfo.category === 'pdf' || item.url.toLowerCase().endsWith('.pdf')) {
+          container.innerHTML = `
+            <iframe src="${item.url}#toolbar=1" title="${item.name}" style="width:100%; height:100%; min-height:640px; border:none;"></iframe>
+          `;
           openModal('modal-preview');
-          renderPdfViewer(item, container);
           refreshIcons();
           return;
         }
 
         // 7. General Web Resources & Links
         window.open(item.url, '_blank', 'noopener,noreferrer');
-      }
-
-      // ==========================================================================
-      // CRISP 60FPS LAZY-RENDERED PDF VIEWER (FROM PERSONAL-LMS-MAIN ARCHITECTURE)
-      // ==========================================================================
-      let activePdfLoadingTask = null;
-      let activePdfObserver = null;
-
-      function cleanupActivePdf() {
-        if (activePdfObserver) {
-          activePdfObserver.disconnect();
-          activePdfObserver = null;
-        }
-        if (activePdfLoadingTask && activePdfLoadingTask.destroy) {
-          try { activePdfLoadingTask.destroy(); } catch (e) {}
-        }
-        activePdfLoadingTask = null;
-        const pagesContainer = document.getElementById('pdfPagesContainer');
-        if (pagesContainer) pagesContainer.innerHTML = '';
-      }
-
-      function loadPdfJsLibrary() {
-        if (window.pdfjsLib) {
-          if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
-            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-          }
-          return Promise.resolve(window.pdfjsLib);
-        }
-        return new Promise((resolve, reject) => {
-          const script = document.createElement('script');
-          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-          script.onload = () => {
-            if (window.pdfjsLib) {
-              window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-              resolve(window.pdfjsLib);
-            } else {
-              reject(new Error('PDF.js failed to initialize'));
-            }
-          };
-          script.onerror = () => reject(new Error('Failed to load PDF.js script from CDN'));
-          document.head.appendChild(script);
-        });
-      }
-
-      // Renders PDFs with PDF.js using on-demand IntersectionObserver page rendering.
-      // Page 1 is rendered immediately so the PDF appears instantly.
-      // Subsequent pages render proactively as they scroll into view, keeping memory low
-      // and scrolling completely lag-free (60fps) with crisp high-DPI scaling.
-      async function renderPdfViewer(item, container) {
-        if (!container) return;
-        cleanupActivePdf();
-
-        container.innerHTML = `
-          <div style="padding:40px 20px; text-align:center;">
-            <div class="loading-spinner" style="width:36px; height:36px; margin:0 auto 14px; border-width:3px;"></div>
-            <div style="font-size:0.95rem; font-weight:600; color:var(--text-main);">Preparing PDF viewer...</div>
-          </div>
-        `;
-
-        const fullLink = item.url;
-        const filename = item.name;
-
-        const toolbar =
-          '<div class="pdf-toolbar">' +
-            '<button type="button" id="pdfOpenTabBtn" class="pdf-tool-btn"><i data-lucide="external-link" style="width:14px;height:14px;"></i><span>Open in new tab</span></button>' +
-            '<button type="button" id="pdfDownloadBtn" class="pdf-tool-btn"><i data-lucide="download" style="width:14px;height:14px;"></i><span>Download</span></button>' +
-          '</div>';
-
-        try {
-          const pdfjs = await loadPdfJsLibrary();
-          const response = await fetch(fullLink);
-          const data = await response.arrayBuffer();
-          activePdfLoadingTask = pdfjs.getDocument({
-            data: data,
-            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-            cMapPacked: true,
-            standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/'
-          });
-          const pdf = await activePdfLoadingTask.promise;
-
-          const pageCount = pdf.numPages;
-          const MAX_PAGES = 30;
-          const pagesToRender = Math.min(pageCount, MAX_PAGES);
-          const note = pageCount > MAX_PAGES
-            ? '<div class="pdf-note">Showing the first ' + MAX_PAGES + ' of ' + pageCount + ' pages. Use "Open in new tab" for the full document.</div>'
-            : '';
-
-          container.innerHTML = toolbar + '<div id="pdfPagesContainer" class="pdf-canvas-wrap"></div>' + note;
-          wirePdfToolbar(fullLink, filename);
-          refreshIcons();
-
-          const pagesContainer = document.getElementById('pdfPagesContainer');
-          if (!pagesContainer) return;
-
-          // Optimal sharp ratio capped at 1.75 to balance ultra-crisp Retina text with 60fps GPU smoothness
-          const ratio = Math.min(window.devicePixelRatio || 1, 1.75);
-          const cssWidth = Math.min((pagesContainer.clientWidth || 800) - 24, 900);
-
-          // Get first page to calculate base aspect ratio and container dimensions
-          const firstPage = await pdf.getPage(1);
-          const base = firstPage.getViewport({ scale: 1 });
-          const baseScale = (cssWidth / base.width) * ratio;
-          const initialViewport = firstPage.getViewport({ scale: baseScale });
-          const approxHeight = Math.floor(initialViewport.height / ratio);
-
-          // Render a single page into its wrapper container
-          const renderPageIntoWrapper = async (pageNum, wrapper) => {
-            if (!wrapper || wrapper.dataset.rendered === 'true') return;
-            wrapper.dataset.rendered = 'true';
-            try {
-              const page = await pdf.getPage(pageNum);
-              const pBase = page.getViewport({ scale: 1 });
-              const pScale = (cssWidth / pBase.width) * ratio;
-              const pViewport = page.getViewport({ scale: pScale });
-
-              const canvas = document.createElement('canvas');
-              canvas.className = 'pdf-page-canvas';
-              canvas.width = Math.floor(pViewport.width);
-              canvas.height = Math.floor(pViewport.height);
-              canvas.style.width = cssWidth + 'px';
-              canvas.style.height = Math.floor(pViewport.height / ratio) + 'px';
-
-              const ctx = canvas.getContext('2d');
-              await page.render({ canvasContext: ctx, viewport: pViewport }).promise;
-
-              if (!document.getElementById('pdfPagesContainer')) return; // preview closed
-              wrapper.innerHTML = '';
-              wrapper.appendChild(canvas);
-
-              const badge = document.createElement('div');
-              badge.className = 'pdf-page-num-badge';
-              badge.textContent = `Page ${pageNum} of ${pageCount}`;
-              wrapper.appendChild(badge);
-            } catch (err) {
-              console.warn(`Error rendering page ${pageNum}:`, err);
-            }
-          };
-
-          // Setup IntersectionObserver for smooth on-demand rendering as the user scrolls
-          activePdfObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                const el = entry.target;
-                const p = parseInt(el.dataset.page, 10);
-                if (activePdfObserver) activePdfObserver.unobserve(el);
-                renderPageIntoWrapper(p, el);
-              }
-            });
-          }, { root: pagesContainer, rootMargin: '450px 0px' });
-
-          // Create page placeholder slots with exact dimensions
-          for (let n = 1; n <= pagesToRender; n++) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'pdf-page-wrapper';
-            wrapper.id = `pdf-page-${n}`;
-            wrapper.dataset.page = n;
-            wrapper.style.width = cssWidth + 'px';
-            wrapper.style.minHeight = approxHeight + 'px';
-
-            wrapper.innerHTML = `
-              <div class="pdf-page-placeholder">
-                <div class="loading-spinner" style="width:22px; height:22px; margin-bottom:6px; border-width:2px;"></div>
-                <span>Loading Page ${n}...</span>
-              </div>
-            `;
-            pagesContainer.appendChild(wrapper);
-
-            if (n === 1) {
-              // Render page 1 immediately so reading begins instantly
-              renderPageIntoWrapper(1, wrapper);
-            } else {
-              activePdfObserver.observe(wrapper);
-            }
-          }
-          return;
-        } catch (_error) {
-          console.warn('PDF.js rendering fallback to iframe:', _error);
-        }
-
-        let blobUrl = '';
-        try {
-          const response = await fetch(fullLink);
-          const blob = await response.blob();
-          blobUrl = URL.createObjectURL(blob);
-        } catch (_e) {}
-
-        const hint = '<div class="pdf-note">If the document does not appear (common on phones), use the buttons above to open or download it.</div>';
-        const iframe = blobUrl
-          ? '<iframe class="pdf-preview" style="width:100%;height:72vh;border:none;" src="' + blobUrl + '"></iframe>'
-          : '<iframe class="pdf-preview" style="width:100%;height:72vh;border:none;" src="' + fullLink + '#toolbar=1"></iframe>';
-        container.innerHTML = toolbar + hint + iframe;
-        wirePdfToolbar(fullLink, filename);
-        refreshIcons();
-      }
-
-      function wirePdfToolbar(fullLink, filename) {
-        const openBtn = document.getElementById('pdfOpenTabBtn');
-        const dlBtn = document.getElementById('pdfDownloadBtn');
-        if (openBtn) {
-          openBtn.addEventListener('click', function() { window.open(fullLink, '_blank', 'noopener,noreferrer'); });
-        }
-        if (dlBtn) {
-          dlBtn.addEventListener('click', async function() {
-            try {
-              const r = await fetch(fullLink);
-              const b = await r.blob();
-              const u = URL.createObjectURL(b);
-              const a = document.createElement('a');
-              a.href = u;
-              a.download = filename || 'document.pdf';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              URL.revokeObjectURL(u);
-            } catch (_e) {
-              window.open(fullLink, '_blank');
-            }
-          });
-        }
       }
 
       // 1-Tap Native Share & Deep Link Engine
