@@ -454,6 +454,7 @@ export default {
           headers.set('etag', object.httpEtag);
           headers.set('cache-control', 'public, max-age=31536000, immutable');
           headers.set('Access-Control-Allow-Origin', '*');
+          headers.set('X-Content-Type-Options', 'nosniff');
 
           const mimeInfo = getFileStreamMime(storageKey, headers.get('content-type') || 'application/octet-stream');
           headers.set('content-type', mimeInfo.mime);
@@ -481,7 +482,8 @@ export default {
                 'content-type': mimeInfo.mime,
                 'content-disposition': `${disposition}; filename="${encodeURIComponent(fileName)}"`,
                 'cache-control': 'public, max-age=86400',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'X-Content-Type-Options': 'nosniff'
               }
             });
           }
@@ -508,7 +510,8 @@ export default {
                 'content-type': mimeInfo.mime,
                 'content-disposition': `${disposition}; filename="${encodeURIComponent(blobMeta.name || storageKey)}"`,
                 'cache-control': 'public, max-age=86400',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                'X-Content-Type-Options': 'nosniff'
               }
             });
           } catch (e) {

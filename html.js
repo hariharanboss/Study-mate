@@ -8065,25 +8065,25 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
       function closeModal(modalId) {
         const modal = document.getElementById(modalId);
-        if (modal && modal.classList.contains('show')) {
+        if (modal) {
           modal.classList.remove('show');
-          if (modalId === 'modal-preview') {
-            const embed = document.getElementById('preview-embed-container');
-            if (embed) embed.innerHTML = '';
-            activeCurrentResourceItem = null;
-            if (window.location.hash.startsWith('#/file/')) {
-              const targetHash = (state.currentFolderId === 'root') ? '#/' : \`#/folder/\${state.currentFolderId}\`;
-              window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
-            }
+        }
+        if (modalId === 'modal-preview') {
+          const embed = document.getElementById('preview-embed-container');
+          if (embed) embed.innerHTML = '';
+          activeCurrentResourceItem = null;
+          if (window.location.hash.startsWith('#/file/')) {
+            const targetHash = (state.currentFolderId === 'root') ? '#/' : \`#/folder/\${state.currentFolderId}\`;
+            window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
           }
-          if (modalId === 'modal-youtube') {
-            const yt = document.getElementById('youtube-iframe');
-            if (yt) yt.src = '';
-            activeYouTubeItem = null;
-            if (window.location.hash.startsWith('#/file/')) {
-              const targetHash = (state.currentFolderId === 'root') ? '#/' : \`#/folder/\${state.currentFolderId}\`;
-              window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
-            }
+        }
+        if (modalId === 'modal-youtube') {
+          const yt = document.getElementById('youtube-iframe');
+          if (yt) yt.src = '';
+          activeYouTubeItem = null;
+          if (window.location.hash.startsWith('#/file/')) {
+            const targetHash = (state.currentFolderId === 'root') ? '#/' : \`#/folder/\${state.currentFolderId}\`;
+            window.history.replaceState({ folderId: state.currentFolderId, isModal: false }, '', targetHash);
           }
         }
       }
@@ -8113,10 +8113,17 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       // ==========================================================================
       // NAVIGATION & RESOURCE VIEWING WITH ZERO-GLITCH HISTORY ENGINE
       // ==========================================================================
+      let isNavigatingFolder = false;
+
       function navigateToFolder(folderId, pushHistory = true) {
         state.currentFolderId = folderId;
+        state.selectedItemId = null;
+        if (state.selectedItemIds) state.selectedItemIds.clear();
         state.searchQuery = '';
         els.searchInput.value = '';
+
+        // Guarantee preview modal is closed and any active iframe is destroyed immediately
+        closeModal('modal-preview');
 
         if (pushHistory) {
           const hash = (folderId === 'root') ? '#/' : \`#/folder/\${folderId}\`;
@@ -8125,8 +8132,6 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
         renderBreadcrumbs();
         renderExplorerGrid();
-        purgeExpiredRecycleBinItems();
-        updateRecycleBinBadge();
         purgeExpiredRecycleBinItems();
         updateRecycleBinBadge();
       }
@@ -8281,11 +8286,16 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         const item = findNodeById(state.fsTree, itemId);
         if (!item) return;
 
+        // Debounce folder transitions to avoid mobile double-tap ghost clicks on newly rendered files
+        if (isNavigatingFolder) return;
+
         // Select item on single click
         selectItem(itemId);
 
         // Open folder or resource directly on single click
         if (item.type === 'folder') {
+          isNavigatingFolder = true;
+          setTimeout(() => { isNavigatingFolder = false; }, 300);
           navigateToFolder(item.id);
         } else {
           openResourceItem(item);
@@ -8558,7 +8568,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                 </div>
               </div>
               <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:0; width:100%; height:100%; overflow:hidden;">
-                <iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                <iframe src="\${gdocsEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
               </div>
             </div>
           \`;
@@ -8578,13 +8588,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           if (tabGDocs) {
             tabGDocs.onclick = () => {
               setActiveTab(tabGDocs);
-              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>\`;
+              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>\`;
             };
           }
           if (tabOffice) {
             tabOffice.onclick = () => {
               setActiveTab(tabOffice);
-              area.innerHTML = \`<iframe src="\${officeEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>\`;
+              area.innerHTML = \`<iframe src="\${officeEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>\`;
             };
           }
           if (tabCard) {
@@ -8646,7 +8656,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
           newTabBtn.href = gdocsFullUrl;
           container.innerHTML = \`
-            <iframe src="\${gdocsUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            <iframe src="\${gdocsUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
           \`;
           openModal('modal-preview');
           refreshIcons();
@@ -8664,7 +8674,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
 
           newTabBtn.href = gdocsFullUrl;
           container.innerHTML = \`
-            <iframe src="\${gdocsUrl}" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            <iframe src="\${gdocsUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
           \`;
           openModal('modal-preview');
           refreshIcons();
@@ -13387,7 +13397,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             // Auto-open deep-linked file or video immediately
             if (deepLinkFileId) {
               const deepItem = findNodeById(state.fsTree, deepLinkFileId);
-              if (deepItem) {
+              if (deepItem && deepItem.type !== 'folder') {
                 setTimeout(() => openResourceItem(deepItem, false), 120);
               }
             }
@@ -13566,12 +13576,12 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         const officeEmbedUrl = \`https://view.officeapps.live.com/op/embed.aspx?src=\${encodeURIComponent(fullPublicUrl)}\`;
 
         if (isPdf) {
-          theaterStage.innerHTML = \`<iframe id="theater-pdf-frame" src="\${item.url}#page=1&toolbar=0&navpanes=0" title="\${item.name}" allowfullscreen></iframe>\`;
+          theaterStage.innerHTML = \`<iframe id="theater-pdf-frame" src="\${item.url}#page=1&toolbar=0&navpanes=0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" allowfullscreen></iframe>\`;
         } else {
           // If on localhost, show dual option with office viewer or local slide deck simulator
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           if (!isLocal) {
-            theaterStage.innerHTML = \`<iframe id="theater-ppt-frame" src="\${officeEmbedUrl}" title="\${item.name}" allowfullscreen></iframe>\`;
+            theaterStage.innerHTML = \`<iframe id="theater-ppt-frame" src="\${officeEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="\${item.name}" allowfullscreen></iframe>\`;
           } else {
             theaterStage.innerHTML = \`
               <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
