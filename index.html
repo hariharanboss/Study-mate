@@ -8494,10 +8494,6 @@
           const fullPublicUrl = item.url.startsWith('http') ? item.url : (window.location.origin + item.url);
           const officeEmbedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fullPublicUrl)}`;
           const gdocsEmbedUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}&embedded=true`;
-          const gdocsFullUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}`;
-
-          // View in Google Docs Viewer in new tab instead of raw file download
-          newTabBtn.href = gdocsFullUrl;
 
           const brandColors = {
             'office-presentation': { bg: 'rgba(234, 88, 12, 0.18)', border: '#ea580c', icon: 'presentation', name: 'PowerPoint Presentation' },
@@ -8505,9 +8501,6 @@
             'office-sheet': { bg: 'rgba(22, 163, 74, 0.18)', border: '#16a34a', icon: 'sheet', name: 'Excel Spreadsheet' }
           };
           const brand = brandColors[fileInfo.category] || brandColors['office-doc'];
-
-          // Legacy binary office formats (.ppt, .doc, .xls) are not supported by Office Online and trigger auto-downloads
-          const isModernOffice = ['pptx', 'docx', 'xlsx'].includes(fileInfo.ext);
 
           const cardHtml = `
             <div class="office-preview-card">
@@ -8525,11 +8518,11 @@
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; max-width:550px;">
                 <a href="${downloadBtn.href}" download="${item.name}" class="btn-glass btn-primary" style="padding:10px 22px; font-size:0.88rem;">
                   <i data-lucide="download" class="lucide-icon"></i>
-                  <span>Download File</span>
+                  <span>Download for PowerPoint / Word</span>
                 </a>
-                <a href="${gdocsFullUrl}" target="_blank" class="btn-glass" style="padding:10px 20px; font-size:0.88rem;">
+                <a href="${officeEmbedUrl}" target="_blank" class="btn-glass" style="padding:10px 20px; font-size:0.88rem;">
                   <i data-lucide="external-link" class="lucide-icon"></i>
-                  <span>Open in Google Viewer</span>
+                  <span>Open in Web Office</span>
                 </a>
               </div>
               ${isLocal ? `
@@ -8550,24 +8543,22 @@
                   <span style="font-size:0.82rem; color:var(--text-subtle);">${brand.name}</span>
                 </div>
                 <div class="office-tabs">
-                  <button type="button" class="office-tab-btn active" id="tab-google-docs">
+                  <button type="button" class="office-tab-btn active" id="tab-office-card">
+                    <i data-lucide="file-check" style="width:13px; height:13px;"></i>
+                    <span>Presentation View</span>
+                  </button>
+                  <button type="button" class="office-tab-btn" id="tab-office-online">
+                    <i data-lucide="globe" style="width:13px; height:13px;"></i>
+                    <span>Office Online</span>
+                  </button>
+                  <button type="button" class="office-tab-btn" id="tab-google-docs">
                     <i data-lucide="layout" style="width:13px; height:13px;"></i>
                     <span>Google Viewer</span>
                   </button>
-                  ${isModernOffice ? `
-                    <button type="button" class="office-tab-btn" id="tab-office-online">
-                      <i data-lucide="globe" style="width:13px; height:13px;"></i>
-                      <span>Office Online</span>
-                    </button>
-                  ` : ''}
-                  <button type="button" class="office-tab-btn" id="tab-office-card">
-                    <i data-lucide="file-check" style="width:13px; height:13px;"></i>
-                    <span>Overview & Download</span>
-                  </button>
                 </div>
               </div>
-              <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:0; width:100%; height:100%; overflow:hidden;">
-                <iframe src="${gdocsEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
+              <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:560px;">
+                ${cardHtml}
               </div>
             </div>
           `;
@@ -8581,26 +8572,26 @@
           const tabGDocs = document.getElementById('tab-google-docs');
 
           function setActiveTab(activeBtn) {
-            [tabGDocs, tabOffice, tabCard].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
+            [tabCard, tabOffice, tabGDocs].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
           }
 
-          if (tabGDocs) {
-            tabGDocs.onclick = () => {
-              setActiveTab(tabGDocs);
-              area.innerHTML = `<iframe src="${gdocsEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-            };
-          }
-          if (tabOffice) {
-            tabOffice.onclick = () => {
-              setActiveTab(tabOffice);
-              area.innerHTML = `<iframe src="${officeEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-            };
-          }
           if (tabCard) {
             tabCard.onclick = () => {
               setActiveTab(tabCard);
               area.innerHTML = cardHtml;
               refreshIcons();
+            };
+          }
+          if (tabOffice) {
+            tabOffice.onclick = () => {
+              setActiveTab(tabOffice);
+              area.innerHTML = `<iframe src="${officeEmbedUrl}" title="${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>`;
+            };
+          }
+          if (tabGDocs) {
+            tabGDocs.onclick = () => {
+              setActiveTab(tabGDocs);
+              area.innerHTML = `<iframe src="${gdocsEmbedUrl}" title="${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>`;
             };
           }
           return;
@@ -8647,68 +8638,19 @@
           return;
         }
 
-        // 6. PDF Documents & Default Embeds (Google Drive Viewer)
+        // 6. PDF Documents & Default Embeds (Native Fast Viewer from commit 35aa817)
         if (fileInfo.category === 'pdf' || item.url.toLowerCase().endsWith('.pdf') || (item.name && item.name.toLowerCase().endsWith('.pdf'))) {
-          const fullPublicUrl = item.url.startsWith('http') ? item.url : (window.location.origin + item.url);
-          const gdocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}&embedded=true`;
-          const gdocsFullUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}`;
-
-          newTabBtn.href = gdocsFullUrl;
+          newTabBtn.href = item.url;
           container.innerHTML = `
-            <iframe src="${gdocsUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            <iframe src="${item.url}#toolbar=1" title="${item.name}" style="width:100%; height:100%; min-height:640px; border:none; display:block;" allowfullscreen></iframe>
           `;
           openModal('modal-preview');
           refreshIcons();
           return;
         }
 
-        // 7. General Document Fallback (Google Viewer Engine)
-        const googleDocExts = ['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf', 'odt', 'odp', 'ods', 'rtf', 'pages', 'ai', 'psd', 'eps', 'tiff', 'tif', 'csv', 'tsv'];
-        const isGoogleViewable = googleDocExts.includes(fileInfo.ext) ||
-          googleDocExts.some(ext => item.url.toLowerCase().endsWith('.' + ext) || (item.name && item.name.toLowerCase().endsWith('.' + ext)));
-        if (isGoogleViewable) {
-          const fullPublicUrl = item.url.startsWith('http') ? item.url : (window.location.origin + item.url);
-          const gdocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}&embedded=true`;
-          const gdocsFullUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}`;
-
-          newTabBtn.href = gdocsFullUrl;
-          container.innerHTML = `
-            <iframe src="${gdocsUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" style="width:100%; height:100%; flex:1; min-height:0; border:none; display:block;" allow="autoplay; fullscreen" allowfullscreen></iframe>
-          `;
-          openModal('modal-preview');
-          refreshIcons();
-          return;
-        }
-
-        // 8. General Files & Web Resources (Clean Viewfinder Card - NO automatic download!)
-        const isExternalUrl = item.url.startsWith('http://') || (item.url.startsWith('https://') && !item.url.includes(window.location.hostname));
-        if (isExternalUrl) {
-          window.open(item.url, '_blank', 'noopener,noreferrer');
-          return;
-        }
-
-        // For all uploaded or local files: NEVER auto-download, always present viewfinder card
-        container.innerHTML = `
-          <div class="office-preview-card" style="padding: 48px 24px; text-align: center;">
-            <div class="office-doc-icon-box" style="background: rgba(59, 130, 246, 0.18); border: 2px solid #3b82f6; color: #3b82f6; width: 68px; height: 68px; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;">
-              <i data-lucide="${fileInfo.icon || 'file'}" style="width: 36px; height: 36px;"></i>
-            </div>
-            <div class="office-doc-title" style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">${item.name}</div>
-            <div class="office-doc-meta" style="display: flex; gap: 8px; justify-content: center; align-items: center; font-size: 0.82rem; color: var(--text-subtle); margin-bottom: 24px;">
-              <span>${fileInfo.label || 'File'}</span>
-              <span>•</span>
-              <span>${formatFileSize(item.fileSize) || 'Resource'}</span>
-            </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-              <a href="${downloadBtn.href}" download="${item.name}" class="btn-glass btn-primary" style="padding: 10px 24px; font-size: 0.9rem;">
-                <i data-lucide="download" class="lucide-icon"></i>
-                <span>Download File</span>
-              </a>
-            </div>
-          </div>
-        `;
-        openModal('modal-preview');
-        refreshIcons();
+        // 7. General Web Resources & Links
+        window.open(item.url, '_blank', 'noopener,noreferrer');
       }
 
       // 1-Tap Native Share & Deep Link Engine
@@ -11888,16 +11830,7 @@
       document.getElementById('ctx-open-tab').addEventListener('click', () => {
         const item = findNodeById(state.fsTree, state.contextMenuItemId);
         hideContextMenus();
-        if (!item || !item.url) return;
-        const fileInfo = getFileTypeInfo(item);
-        const fullPublicUrl = item.url.startsWith('http') ? item.url : (window.location.origin + item.url);
-        const googleDocExts = ['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf', 'odt', 'odp', 'ods', 'rtf', 'pages', 'ai', 'psd', 'eps', 'tiff', 'tif', 'csv', 'tsv'];
-        const isDoc = fileInfo.category === 'pdf' || fileInfo.category.startsWith('office-') || googleDocExts.includes(fileInfo.ext);
-        if (isDoc) {
-          window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(fullPublicUrl)}`, '_blank', 'noopener,noreferrer');
-        } else {
-          window.open(item.url, '_blank', 'noopener,noreferrer');
-        }
+        if (item && item.url) window.open(item.url, '_blank');
       });
 
       document.getElementById('ctx-download').addEventListener('click', () => {
@@ -13575,12 +13508,12 @@
         const officeEmbedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fullPublicUrl)}`;
 
         if (isPdf) {
-          theaterStage.innerHTML = `<iframe id="theater-pdf-frame" src="${item.url}#page=1&toolbar=0&navpanes=0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" allowfullscreen></iframe>`;
+          theaterStage.innerHTML = `<iframe id="theater-pdf-frame" src="${item.url}#page=1&toolbar=0&navpanes=0" title="${item.name}" allowfullscreen></iframe>`;
         } else {
           // If on localhost, show dual option with office viewer or local slide deck simulator
           const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
           if (!isLocal) {
-            theaterStage.innerHTML = `<iframe id="theater-ppt-frame" src="${officeEmbedUrl}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="${item.name}" allowfullscreen></iframe>`;
+            theaterStage.innerHTML = `<iframe id="theater-ppt-frame" src="${officeEmbedUrl}" title="${item.name}" allowfullscreen></iframe>`;
           } else {
             theaterStage.innerHTML = `
               <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;">
