@@ -8544,22 +8544,22 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                   <span style="font-size:0.82rem; color:var(--text-subtle);">\${brand.name}</span>
                 </div>
                 <div class="office-tabs">
-                  <button type="button" class="office-tab-btn active" id="tab-office-card">
-                    <i data-lucide="file-check" style="width:13px; height:13px;"></i>
-                    <span>Presentation View</span>
+                  <button type="button" class="office-tab-btn active" id="tab-google-docs">
+                    <i data-lucide="layout" style="width:13px; height:13px;"></i>
+                    <span>Google Viewer</span>
                   </button>
                   <button type="button" class="office-tab-btn" id="tab-office-online">
                     <i data-lucide="globe" style="width:13px; height:13px;"></i>
                     <span>Office Online</span>
                   </button>
-                  <button type="button" class="office-tab-btn" id="tab-google-docs">
-                    <i data-lucide="layout" style="width:13px; height:13px;"></i>
-                    <span>Google Viewer</span>
+                  <button type="button" class="office-tab-btn" id="tab-office-card">
+                    <i data-lucide="file-check" style="width:13px; height:13px;"></i>
+                    <span>Presentation View</span>
                   </button>
                 </div>
               </div>
               <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:560px;">
-                \${cardHtml}
+                <iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>
               </div>
             </div>
           \`;
@@ -8573,14 +8573,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           const tabGDocs = document.getElementById('tab-google-docs');
 
           function setActiveTab(activeBtn) {
-            [tabCard, tabOffice, tabGDocs].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
+            [tabGDocs, tabOffice, tabCard].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
           }
 
-          if (tabCard) {
-            tabCard.onclick = () => {
-              setActiveTab(tabCard);
-              area.innerHTML = cardHtml;
-              refreshIcons();
+          if (tabGDocs) {
+            tabGDocs.onclick = () => {
+              setActiveTab(tabGDocs);
+              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>\`;
             };
           }
           if (tabOffice) {
@@ -8589,10 +8588,11 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
               area.innerHTML = \`<iframe src="\${officeEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>\`;
             };
           }
-          if (tabGDocs) {
-            tabGDocs.onclick = () => {
-              setActiveTab(tabGDocs);
-              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>\`;
+          if (tabCard) {
+            tabCard.onclick = () => {
+              setActiveTab(tabCard);
+              area.innerHTML = cardHtml;
+              refreshIcons();
             };
           }
           return;
