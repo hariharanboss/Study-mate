@@ -1,5 +1,5 @@
 // Progressive Web App (PWA) Service Worker for Department LMS
-const CACHE_NAME = 'dept-lms-cache-v58';
+const CACHE_NAME = 'dept-lms-cache-v59';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json'
@@ -91,8 +91,8 @@ self.addEventListener('push', event => {
 
   const options = {
     body: data.body || 'New announcement from Study Mate',
-    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📢</text></svg>',
-    badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⚡</text></svg>',
+    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">&#128226;</text></svg>',
+    badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">&#9889;</text></svg>',
     vibrate: [200, 100, 200],
     data: { url: data.url || '/' },
     tag: data.tag || 'studymate-broadcast',
