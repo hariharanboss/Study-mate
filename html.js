@@ -3467,6 +3467,43 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       color: #ffffff;
       border-color: var(--accent-primary);
     }
+    .viewer-loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: radial-gradient(circle at center, #111827 0%, #090d16 100%);
+      z-index: 5;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .viewer-spinner {
+      width: 38px;
+      height: 38px;
+      border: 3px solid rgba(59, 130, 246, 0.2);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: viewerSpin 0.8s linear infinite;
+    }
+    @keyframes viewerSpin {
+      to { transform: rotate(360deg); }
+    }
+    .viewer-loading-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      letter-spacing: 0.01em;
+    }
+    .viewer-loading-subtext {
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
     .office-preview-card {
       display: flex;
       flex-direction: column;
@@ -8576,8 +8613,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
                   </button>
                 </div>
               </div>
-              <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:560px;">
-                <iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>
+              <div id="office-content-area" style="flex:1; display:flex; flex-direction:column; min-height:560px; position:relative; overflow:hidden;">
+                <div class="viewer-loading-overlay" id="office-loader-overlay">
+                  <div class="viewer-spinner"></div>
+                  <div class="viewer-loading-text">Loading presentation preview...</div>
+                  <div class="viewer-loading-subtext">Connecting to Google Viewer...</div>
+                </div>
+                <iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen onload="const o=document.getElementById('office-loader-overlay'); if(o){o.style.opacity='0'; setTimeout(()=>o.style.display='none', 260);}"></iframe>
               </div>
             </div>
           \`;
@@ -8590,6 +8632,17 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           const tabOffice = document.getElementById('tab-office-online');
           const tabGDocs = document.getElementById('tab-google-docs');
 
+          function renderIframeView(embedUrl, engineName) {
+            return \`
+              <div class="viewer-loading-overlay" id="office-loader-overlay">
+                <div class="viewer-spinner"></div>
+                <div class="viewer-loading-text">Loading presentation preview...</div>
+                <div class="viewer-loading-subtext">Connecting to \${engineName}...</div>
+              </div>
+              <iframe src="\${embedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen onload="const o=document.getElementById('office-loader-overlay'); if(o){o.style.opacity='0'; setTimeout(()=>o.style.display='none', 260);}"></iframe>
+            \`;
+          }
+
           function setActiveTab(activeBtn) {
             [tabGDocs, tabOffice, tabCard].forEach(btn => btn && btn.classList.toggle('active', btn === activeBtn));
           }
@@ -8597,13 +8650,13 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
           if (tabGDocs) {
             tabGDocs.onclick = () => {
               setActiveTab(tabGDocs);
-              area.innerHTML = \`<iframe src="\${gdocsEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>\`;
+              area.innerHTML = renderIframeView(gdocsEmbedUrl, 'Google Viewer');
             };
           }
           if (tabOffice) {
             tabOffice.onclick = () => {
               setActiveTab(tabOffice);
-              area.innerHTML = \`<iframe src="\${officeEmbedUrl}" title="\${item.name}" style="width:100%; height:100%; min-height:560px; border:none;" allowfullscreen></iframe>\`;
+              area.innerHTML = renderIframeView(officeEmbedUrl, 'Office Online');
             };
           }
           if (tabCard) {
