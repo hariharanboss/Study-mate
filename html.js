@@ -7045,6 +7045,12 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         return (match && match[2].length === 11) ? match[2] : null;
       }
 
+      function extractYouTubePlaylistId(url) {
+        if (!url) return null;
+        const match = url.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+        return match ? match[1] : null;
+      }
+
       function formatFileSize(bytes) {
         if (!bytes || bytes === 0) return '';
         const k = 1024;
@@ -7188,8 +7194,9 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         if (item.type === 'folder') return { category: 'folder', ext: '', label: 'Folder', icon: 'folder', iconClass: 'icon-folder', color: '#60a5fa' };
 
         const ytId = extractYouTubeId(item.url);
-        if (item.type === 'youtube' || ytId) {
-          return { category: 'youtube', ext: 'video', label: 'YouTube Solution', icon: 'play-circle', iconClass: 'icon-youtube', color: '#ef4444' };
+        const playlistId = extractYouTubePlaylistId(item.url);
+        if (item.type === 'youtube' || ytId || playlistId || (item.url && /youtube\\.com|youtu\\.be/i.test(item.url))) {
+          return { category: 'youtube', ext: 'video', label: playlistId ? 'YouTube Playlist' : 'YouTube Solution', icon: 'play-circle', iconClass: 'icon-youtube', color: '#ef4444' };
         }
 
         const name = (item.name || '').toLowerCase();
@@ -8326,11 +8333,22 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         if (fileInfo.category === 'youtube') {
           activeYouTubeItem = item;
           const ytId = extractYouTubeId(item.url);
+          const playlistId = extractYouTubePlaylistId(item.url);
           document.getElementById('youtube-modal-title').innerHTML = \`
             <i data-lucide="play-circle" class="lucide-icon" style="color:var(--accent-youtube);"></i>
             <span>\${item.name}</span>
           \`;
-          document.getElementById('youtube-iframe').src = \`https://www.youtube.com/embed/\${ytId}?autoplay=1\`;
+          let embedSrc = '';
+          if (ytId && playlistId) {
+            embedSrc = \`https://www.youtube.com/embed/\${ytId}?list=\${playlistId}&autoplay=1\`;
+          } else if (ytId) {
+            embedSrc = \`https://www.youtube.com/embed/\${ytId}?autoplay=1\`;
+          } else if (playlistId) {
+            embedSrc = \`https://www.youtube.com/embed/videoseries?list=\${playlistId}&autoplay=1\`;
+          } else {
+            embedSrc = item.url;
+          }
+          document.getElementById('youtube-iframe').src = embedSrc;
           document.getElementById('youtube-new-tab-btn').href = item.url;
           openModal('modal-youtube');
           refreshIcons();
@@ -9414,11 +9432,14 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
             renderBreadcrumbs();
             renderExplorerGrid();
             showToast('Changes saved to Cloudflare!', 'success');
+            return true;
           } else {
             showToast(data.error || 'Failed to sync changes', 'error');
+            return false;
           }
         } catch (err) {
           showToast('Network error syncing changes', 'error');
+          return false;
         }
       }
 
@@ -9461,7 +9482,7 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         openModal('modal-admin-link');
       });
 
-      document.getElementById('btn-admin-save-link').addEventListener('click', () => {
+      document.getElementById('btn-admin-save-link').addEventListener('click', async () => {
         const title = document.getElementById('admin-link-title').value.trim();
         const url = document.getElementById('admin-link-url').value.trim();
         const category = document.getElementById('admin-link-category').value;
@@ -9477,23 +9498,27 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         if (!currentFolder) return;
 
         const ytId = extractYouTubeId(url);
+        const playlistId = extractYouTubePlaylistId(url);
+        const isYt = Boolean(ytId || playlistId || /youtube\\.com|youtu\\.be/i.test(url));
         const linkTaskId = 'link_' + Date.now();
-        uploadState.tasks.unshift({
+        const linkTask = {
           id: linkTaskId,
           file: null,
           name: title,
           size: 0,
-          type: ytId ? 'youtube' : 'link',
+          type: isYt ? 'youtube' : 'link',
           targetFolderId: currentFolder.id,
           targetFolderName: currentFolder.name,
           status: 'uploading',
-          progress: 75,
+          progress: 35,
           loaded: 0,
           total: 0,
           speed: 0,
           eta: 0,
-          error: null
-        });
+          error: null,
+          xhr: null
+        };
+        uploadState.tasks.unshift(linkTask);
         showUploadDock();
         renderUploadDock();
 
@@ -9501,17 +9526,34 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
         currentFolder.children.push({
           id: 'item_' + Date.now(),
           name: title,
-          type: ytId ? 'youtube' : 'link',
+          type: isYt ? 'youtube' : 'link',
           category,
           section,
           url,
-          youtubeId: ytId,
+          youtubeId: ytId || (playlistId ? \`playlist:\${playlistId}\` : null),
           description: desc,
           createdAt: new Date().toISOString()
         });
 
         closeModal('modal-admin-link');
-        syncTreeToBackend();
+
+        // Smoothly advance progress while sync request is processing
+        linkTask.progress = 70;
+        updateTaskRowUI(linkTaskId);
+        updateUploadDockHeader();
+
+        const success = await syncTreeToBackend();
+        if (success) {
+          linkTask.status = 'completed';
+          linkTask.progress = 100;
+          linkTask.error = null;
+        } else {
+          linkTask.status = 'error';
+          linkTask.error = 'Failed to save to Cloudflare';
+        }
+        updateTaskRowUI(linkTaskId);
+        updateUploadDockHeader();
+        renderUploadDock();
       });
 
       // Enter key support for folder and link modal inputs
@@ -9911,8 +9953,15 @@ export const HTML_TEMPLATE = `<!DOCTYPE html>
       function cancelUploadTask(taskId) {
         const task = uploadState.tasks.find(t => t.id === taskId);
         if (!task) return;
-        if (task.status === 'uploading' && task.xhr) {
-          task.xhr.abort();
+        if (task.status === 'uploading') {
+          if (task.xhr) {
+            task.xhr.abort();
+          } else {
+            task.status = 'cancelled';
+            task.error = 'Upload cancelled by user';
+            updateTaskRowUI(task.id);
+            updateUploadDockHeader();
+          }
         } else if (task.status === 'queued') {
           task.status = 'cancelled';
           task.error = 'Upload cancelled by user';
