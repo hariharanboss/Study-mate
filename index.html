@@ -1387,12 +1387,16 @@
         align-items: center !important;
         justify-content: center !important;
         padding: 8px !important;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
       #modal-preview .modal-glass.large {
         max-width: 100% !important;
         width: 100% !important;
         height: 94vh !important;
+        height: calc(100dvh - 16px) !important;
         max-height: 94vh !important;
+        max-height: calc(100dvh - 16px) !important;
         border-radius: var(--radius-lg) !important;
         overflow: hidden !important;
         display: flex !important;
@@ -1415,8 +1419,18 @@
       }
       #modal-preview .modal-glass.large .modal-header .btn-glass {
         font-size: 0.78rem !important;
-        padding: 5px 10px !important;
+        padding: 6px 11px !important;
+        min-height: 36px !important;
         white-space: nowrap !important;
+        touch-action: manipulation;
+      }
+      #modal-preview .modal-close-btn {
+        min-width: 40px !important;
+        min-height: 40px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        touch-action: manipulation;
       }
       #modal-preview .modal-glass.large .modal-body {
         padding: 0 !important;
@@ -3539,6 +3553,92 @@
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    /* Mobile PDF Preview Card */
+    .mobile-pdf-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 20px 28px;
+      text-align: center;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(30, 41, 59, 0.7) 0%, #090d16 100%);
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .mobile-pdf-icon-box {
+      width: 78px;
+      height: 78px;
+      border-radius: 20px;
+      background: rgba(239, 68, 68, 0.14);
+      border: 2px solid rgba(239, 68, 68, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 30px rgba(239, 68, 68, 0.2);
+    }
+    .mobile-pdf-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main, #f1f5f9);
+      max-width: 90%;
+      word-break: break-word;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .mobile-pdf-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-subtle, #94a3b8);
+      margin-bottom: 24px;
+    }
+    .badge-pdf-tag {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 1px 6px;
+    }
+    .mobile-pdf-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 360px;
+      margin-bottom: 20px;
+    }
+    .btn-mobile-fullscreen {
+      width: 100%;
+      justify-content: center;
+      padding: 13px 20px !important;
+      font-size: 0.95rem !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.01em;
+      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
+    }
+    .mobile-pdf-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-subtle, #94a3b8);
+      max-width: 350px;
+      line-height: 1.45;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
     }
 
     /* Image Viewer */
@@ -8712,9 +8812,54 @@
         // 6. PDF Documents & Default Embeds (Native Fast Viewer from commit 35aa817)
         if (fileInfo.category === 'pdf' || item.url.toLowerCase().endsWith('.pdf') || (item.name && item.name.toLowerCase().endsWith('.pdf'))) {
           newTabBtn.href = item.url;
-          container.innerHTML = `
-            <iframe src="${item.url}#toolbar=1" title="${item.name}" style="width:100%; height:100%; min-height:640px; border:none; display:block;" allowfullscreen></iframe>
-          `;
+
+          const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                                (window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+
+          if (isMobileDevice) {
+            const formattedSize = formatFileSize(item.fileSize) || 'PDF Document';
+            container.innerHTML = `
+              <div class="mobile-pdf-card">
+                <div class="mobile-pdf-icon-box">
+                  <i data-lucide="file-text" style="width:42px; height:42px; color:#ef4444;"></i>
+                </div>
+                <div class="mobile-pdf-title">${item.name}</div>
+                <div class="mobile-pdf-meta">
+                  <span class="badge-pdf-tag">PDF</span>
+                  <span>•</span>
+                  <span>${formattedSize}</span>
+                  <span>•</span>
+                  <span style="color:#10b981; font-weight:600;">Ready to Read</span>
+                </div>
+
+                <div class="mobile-pdf-actions">
+                  <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-glass btn-primary btn-mobile-fullscreen">
+                    <i data-lucide="book-open" class="lucide-icon" style="width:18px; height:18px;"></i>
+                    <span>Read in Fullscreen Reader</span>
+                  </a>
+                  <div style="display:flex; gap:10px; width:100%;">
+                    <a href="${downloadBtn.href}" download="${item.name}" class="btn-glass" style="flex:1; justify-content:center; padding:11px 16px; font-size:0.86rem;">
+                      <i data-lucide="download" class="lucide-icon"></i>
+                      <span>Download</span>
+                    </a>
+                    <button type="button" class="btn-glass" onclick="shareItemResource(activeCurrentResourceItem)" style="flex:1; justify-content:center; padding:11px 16px; font-size:0.86rem;">
+                      <i data-lucide="share-2" class="lucide-icon"></i>
+                      <span>Share</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mobile-pdf-hint">
+                  <i data-lucide="sparkles" style="width:14px; height:14px; color:#60a5fa; flex-shrink:0;"></i>
+                  <span>Opens in your phone's native reader with smooth continuous scrolling, search & pinch-to-zoom.</span>
+                </div>
+              </div>
+            `;
+          } else {
+            container.innerHTML = `
+              <iframe src="${item.url}#toolbar=1" title="${item.name}" style="width:100%; height:100%; min-height:640px; border:none; display:block;" allowfullscreen></iframe>
+            `;
+          }
           openModal('modal-preview');
           refreshIcons();
           return;
